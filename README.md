@@ -21,7 +21,7 @@ npm start
 ### Docker setup
 
 ```bash
-docker pull shresritik/todo
+docker pull shresritik/todo:v1.1.3
 ```
 
 ### Setup .env file
@@ -31,7 +31,7 @@ Create .env file with the help of .env.example to configure the port
 ### Run the server
 
 ```bash
-docker run -p 8000:8000 --env-file=<path_to_env> shresritik/todo
+docker run -p 8000:8000 --env-file=<path_to_env> shresritik/todo:v1.1.3
 ```
 
 ### Routes
