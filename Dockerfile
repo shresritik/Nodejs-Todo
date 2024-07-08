@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ['npm' 'start']
+VOLUME /app
+
+CMD ["npm", "start"]
