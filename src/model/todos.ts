@@ -1,4 +1,5 @@
-import { ITodo, STATUS } from "../interface/todo";
+import { STATUS } from "../enum/enum";
+import { ITodo } from "../interface/todo";
 
 export const data: ITodo[] = [
   {

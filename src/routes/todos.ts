@@ -7,10 +7,15 @@ import {
   deleteTodo,
 } from "../controller/todos";
 const router = express();
-router.get("/", readAllTodos);
-router.get("/:id", readTodo);
+// route handler to create a todo
 router.post("/", createTodo);
+// route handler to read all todos
+router.get("/", readAllTodos);
+// route handler to read a todos by id
+router.get("/:id", readTodo);
+// route handler to update a todos
 router.put("/:id", updateTodo);
+// route handler to delete a todo by id
 router.delete("/:id", deleteTodo);
 
 export default router;

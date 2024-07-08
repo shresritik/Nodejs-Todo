@@ -1,17 +1,31 @@
-import { ITodo, STATUS } from "../interface/todo";
+import { IError, ISuccess, ITodo } from "../interface/todo";
 import { data } from "../model/todos";
 import { isValidStatus } from "../utils/utils";
-
+//read all todos from the models
 export const getAllTodos = () => {
   return data;
 };
-export const getTodo = (id: string) => {
-  return data.find(({ id: todoId }) => todoId === parseInt(id)) as ITodo;
+/**
+ * read a todo by id
+ * @param id : string
+ * @returns todo object
+ */
+
+export const getTodo = (id: string): ITodo | IError => {
+  const result = data.findIndex(({ id: todoId }) => todoId === parseInt(id));
+  if (result == -1) return { error: "No such id found" };
+  return data[result];
 };
-export const createTodo = (todo: ITodo) => {
+/**
+ * create a todo
+ * @param todo object
+ * @returns success or error if status or name is invalid
+ */
+export const createTodo = (todo: ITodo): ISuccess | IError => {
   if (!isValidStatus(todo.status)) {
     return { error: "Status invalid" };
   }
+  if (!todo.name || todo.name.length == 0) return { error: "Name invalid" };
   data.push({
     id: data.length + 1,
     name: todo.name,
@@ -19,18 +33,27 @@ export const createTodo = (todo: ITodo) => {
   });
   return { message: "success" };
 };
-export const updateTodo = (id: string, todo: ITodo) => {
-  if (!isValidStatus(todo.status)) {
+/**
+ * update a todo by id
+ * @param id string
+ * @param todo todo object
+ * @returns success or error if status or id is invalid
+ */
+export const updateTodo = (id: string, todo: ITodo): ISuccess | IError => {
+  if (todo.status && !isValidStatus(todo.status)) {
     return { error: "Status invalid" };
   }
-  const result = data.find(
-    ({ id: todoId }) => todoId === parseInt(id)
-  ) as ITodo;
-  result.name = todo.name;
-  result.status = todo.status;
+  const result = data.findIndex(({ id: todoId }) => todoId === parseInt(id));
+  if (result == -1) return { error: "No such id found" };
+  data[result] = { ...data[result], ...todo };
   return { message: "success" };
 };
-export const deleteTodo = (id: string) => {
+/**
+ * delete a todo by id
+ * @param id string
+ * @returns success or error if id is invalid
+ */
+export const deleteTodo = (id: string): ISuccess | IError => {
   const index = data.findIndex((obj) => obj.id === parseInt(id));
   if (index !== -1) {
     data.splice(index, 1);

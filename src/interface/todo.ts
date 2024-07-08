@@ -1,10 +1,14 @@
+import { STATUS } from "../enum/enum";
+
 export interface ITodo {
   id: number;
   name: string;
   status: STATUS;
 }
-export enum STATUS {
-  INCOMPLETE = "incomplete",
-  ONGOING = "ongoing",
-  COMPLETE = "complete",
+
+export interface IError {
+  error: string;
+}
+export interface ISuccess {
+  message: string;
 }

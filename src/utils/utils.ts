@@ -1,5 +1,9 @@
-import { STATUS } from "../interface/todo";
-
-export function isValidStatus(response: string): response is STATUS {
+import { STATUS } from "../enum/enum";
+/**
+ * checks if the response is in STATUS (complete,incomplete,ongoing)
+ * @param response string
+ * @returns Boolean
+ */
+export function isValidStatus(response: string): boolean {
   return Object.values(STATUS).includes(response as STATUS);
 }
