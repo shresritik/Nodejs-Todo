@@ -3,10 +3,14 @@ import { IUser } from "../interface/user";
 import { getUserByEmail } from "./user";
 import bcrypt from "bcrypt";
 import config from "../config";
-
+import { signUser } from "../utils";
+/**
+ * login the user if email or password exists and generate the tokens
+ * @param body email|password
+ * @returns {access token, refresh token}
+ */
 export async function login(body: Pick<IUser, "email" | "password">) {
   const existingUser = getUserByEmail(body.email);
-  console.log(existingUser);
   if (!existingUser) {
     return { error: "Invalid email or password" };
   }
@@ -14,21 +18,19 @@ export async function login(body: Pick<IUser, "email" | "password">) {
     body.password,
     existingUser.password
   );
-  console.log(existingPasword);
   if (!existingPasword) return { error: "Invalid email or password" };
   const payload = {
     id: existingUser.id,
     email: existingUser.email,
     name: existingUser.name,
   };
-  const accessToken = sign(payload, config.jwt.secret!, {
-    expiresIn: config.jwt.accessTokenExpiryMS,
-  });
-  const refreshToken = sign(payload, config.jwt.secret!, {
-    expiresIn: config.jwt.refreshTokenExpiryMS,
-  });
-  return { accessToken, refreshToken };
+  return signUser(payload);
 }
+/**
+ *generate new tokens from the previous refresh token
+ * @param token refresh token
+ * @returns {access token, refresh token}
+ */
 export async function refresh(token: string) {
   const { id, email, name } = verify(token, config.jwt.secret!) as Pick<
     IUser,
@@ -39,11 +41,5 @@ export async function refresh(token: string) {
     email,
     name,
   };
-  const accessToken = sign(payload, config.jwt.secret!, {
-    expiresIn: config.jwt.accessTokenExpiryMS,
-  });
-  const refreshToken = sign(payload, config.jwt.secret!, {
-    expiresIn: config.jwt.refreshTokenExpiryMS,
-  });
-  return { accessToken, refreshToken };
+  return signUser(payload);
 }

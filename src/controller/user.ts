@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import * as UserService from "../service/user";
-
-export function createUser(req: Request, res: Response) {
+//create a user
+export async function createUser(req: Request, res: Response) {
   const { body } = req;
-  UserService.createUser(body);
-  res.json("User created");
+  const data = await UserService.createUser(body);
+  res.json(data);
 }
+//get all users or get user from a query name
 export function getUsers(req: Request, res: Response) {
   const { query } = req;
   const data = UserService.getUsers(query);
