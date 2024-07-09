@@ -1,9 +1,8 @@
 import { IError, ISuccess, ITodo } from "../interface/todo";
-import { data } from "../model/todos";
-import { isValidStatus } from "../utils/utils";
+import * as TodoModel from "../model/todos";
 //read all todos from the models
-export const getAllTodos = () => {
-  return data;
+export const getAllTodos = (): ITodo[] => {
+  return TodoModel.getAllTodos();
 };
 /**
  * read a todo by id
@@ -12,9 +11,7 @@ export const getAllTodos = () => {
  */
 
 export const getTodo = (id: string): ITodo | IError => {
-  const result = data.findIndex(({ id: todoId }) => todoId === parseInt(id));
-  if (result == -1) return { error: "No such id found" };
-  return data[result];
+  return TodoModel.getTodo(id);
 };
 /**
  * create a todo
@@ -22,16 +19,7 @@ export const getTodo = (id: string): ITodo | IError => {
  * @returns success or error if status or name is invalid
  */
 export const createTodo = (todo: ITodo): ISuccess | IError => {
-  if (!isValidStatus(todo.status)) {
-    return { error: "Status invalid" };
-  }
-  if (!todo.name || todo.name.length == 0) return { error: "Name invalid" };
-  data.push({
-    id: data.length + 1,
-    name: todo.name,
-    status: todo.status,
-  });
-  return { message: "success" };
+  return TodoModel.createTodo(todo);
 };
 /**
  * update a todo by id
@@ -40,13 +28,7 @@ export const createTodo = (todo: ITodo): ISuccess | IError => {
  * @returns success or error if status or id is invalid
  */
 export const updateTodo = (id: string, todo: ITodo): ISuccess | IError => {
-  if (todo.status && !isValidStatus(todo.status)) {
-    return { error: "Status invalid" };
-  }
-  const result = data.findIndex(({ id: todoId }) => todoId === parseInt(id));
-  if (result == -1) return { error: "No such id found" };
-  data[result] = { ...data[result], ...todo };
-  return { message: "success" };
+  return TodoModel.updateTodo(id, todo);
 };
 /**
  * delete a todo by id
@@ -54,11 +36,5 @@ export const updateTodo = (id: string, todo: ITodo): ISuccess | IError => {
  * @returns success or error if id is invalid
  */
 export const deleteTodo = (id: string): ISuccess | IError => {
-  const index = data.findIndex((obj) => obj.id === parseInt(id));
-  if (index !== -1) {
-    data.splice(index, 1);
-    return { message: "Deleted" };
-  } else {
-    return { error: "No such id found" };
-  }
+  return TodoModel.deleteTodo(id);
 };

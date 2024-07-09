@@ -1,4 +1,4 @@
-import { STATUS } from "../enum/enum";
+import { STATUS } from "../enum";
 
 export interface ITodo {
   id: number;
