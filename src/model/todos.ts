@@ -1,7 +1,7 @@
-import { STATUS } from "../enum/enum";
+import { STATUS } from "../enum";
 import { ITodo } from "../interface/todo";
 import { IError, ISuccess } from "../interface/todo";
-import { isValidStatus } from "../utils/utils";
+import { isValidStatus } from "../utils";
 export const data: ITodo[] = [
   {
     id: 1,

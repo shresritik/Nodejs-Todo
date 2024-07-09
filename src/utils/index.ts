@@ -1,4 +1,4 @@
-import { STATUS } from "../enum/enum";
+import { STATUS } from "../enum";
 /**
  * checks if the response is in STATUS (complete,incomplete,ongoing)
  * @param response string
