@@ -1,14 +1,24 @@
 ## A basic CRUD TODO app API with Node.js and Express
 
+### Clone the repo
+
+```bash
+git clone https://github.com/shresritik/Nodejs-Todo/tree/assignment-2
+```
+
+### Setup .env file
+
+Create .env file with the help of .env.example
+
+## Instructions for setup
+
+## Method 1
+
 ### Install Dependencies
 
 ```bash
 npm install
 ```
-
-### Setup .env file
-
-Create .env file with the help of .env.example to configure the port
 
 ### Run the server
 
@@ -16,22 +26,36 @@ Create .env file with the help of .env.example to configure the port
 npm start
 ```
 
-## OR
+## Method 2: Using Docker for Linux
 
-### Docker setup
+Run script.sh
 
 ```bash
-docker pull shresritik/todo:v2.0.0
+chmod +x script.sh
 ```
 
-### Setup .env file
+```bash
+./script.sh
+```
 
-Create .env file with the help of .env.example to configure the port
+## Method 3:Using Docker for Linux / Windows / Mac
+
+Get the latest hash
+
+```bash
+git rev-parse --short HEAD
+```
+
+Use that hash in docker pull
+
+```bash
+docker pull shresritik/todo:<latest_hash>
+```
 
 ### Run the server
 
 ```bash
-docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:v2.0.0
+docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:<latest_hash>
 ```
 
 ### Routes
