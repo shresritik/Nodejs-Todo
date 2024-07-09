@@ -29,13 +29,11 @@ export async function login(body: Pick<IUser, "email" | "password">) {
   });
   return { accessToken, refreshToken };
 }
-export async function refresh(refreshToken: string) {
-  console.log(refreshToken);
-  const { id, email, name } = verify(refreshToken, config.jwt.secret!) as {
-    id: string;
-    email: string;
-    name: string;
-  };
+export async function refresh(token: string) {
+  const { id, email, name } = verify(token, config.jwt.secret!) as Pick<
+    IUser,
+    "id" | "email" | "name"
+  >;
   const payload = {
     id,
     email,
@@ -44,8 +42,8 @@ export async function refresh(refreshToken: string) {
   const accessToken = sign(payload, config.jwt.secret!, {
     expiresIn: config.jwt.accessTokenExpiryMS,
   });
-  const refreshToken2 = sign(payload, config.jwt.secret!, {
+  const refreshToken = sign(payload, config.jwt.secret!, {
     expiresIn: config.jwt.refreshTokenExpiryMS,
   });
-  return { accessToken, refreshToken2 };
+  return { accessToken, refreshToken };
 }

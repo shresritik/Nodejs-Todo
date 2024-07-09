@@ -1,4 +1,5 @@
 import { IUser } from "../interface/user";
+import { IQuery } from "../interface/utils";
 import { userData } from "../model/user";
 import bcrypt from "bcrypt";
 export async function createUser(body: IUser) {
@@ -10,14 +11,15 @@ export async function createUser(body: IUser) {
     password: hashPassword,
   });
 }
-export function getUsers() {
+export function getUsers(query: IQuery) {
+  if (query.q) {
+    return userData.find(({ name }) => name === query.q);
+  }
   return userData;
 }
 export function getUserByEmail(userEmail: string) {
   console.log(
     userData.find(({ email }) => {
-      console.log(email, userEmail);
-
       email === userEmail;
     })
   );

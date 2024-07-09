@@ -7,6 +7,7 @@ export function createUser(req: Request, res: Response) {
   res.json("User created");
 }
 export function getUsers(req: Request, res: Response) {
-  const data = UserService.getUsers();
+  const { query } = req;
+  const data = UserService.getUsers(query);
   res.json(data);
 }

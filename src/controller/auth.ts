@@ -7,8 +7,16 @@ export async function login(req: Request, res: Response) {
   res.json(data);
 }
 export async function refresh(req: Request, res: Response) {
-  const { body } = req;
-  const data = await AuthService.refresh(body.refreshToken);
-  console.log(data);
-  res.json(data);
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.json({ error: "No token found" });
+  } else {
+    const token = authorization.split(" ");
+    if (token.length != 2 || token[0] !== "Bearer") {
+      res.json({ error: "No token found" });
+    }
+    const data = await AuthService.refresh(token[1]);
+    console.log(data);
+    res.json(data);
+  }
 }
