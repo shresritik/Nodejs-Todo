@@ -56,9 +56,9 @@ docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:2.321f08a
 | ------------- | ----------- | ------------------------------- | ------------------------------------------------- | ------------------ |
 | /projects     | POST        | Create a todo                   | name:string<br>status:ongoing,incomplete,complete |
 | /projects     | GET         | Get all todos                   |
-| /projects/:id | GET         | Get a todo                      | id:number                                         |
-| /projects/:id | PUT         | Update a todo                   | id:number                                         |
-| /projects/:id | DELETE      | Delete a todo                   | id:number                                         |
+| /projects/:id | GET         | Get a todo                      |                                                   |
+| /projects/:id | PUT         | Update a todo                   | name:string<br>status:ongoing,incomplete,complete |
+| /projects/:id | DELETE      | Delete a todo                   |                                                   |
 | /users        | POST        | Create a user                   | name:string<br>email:string<br>password:string    |
 | /users        | GET         | Get all users                   |                                                   | :heavy_check_mark: |
 | /users?q=     | GET         | Get a user by name              | q=string                                          | :heavy_check_mark: |
