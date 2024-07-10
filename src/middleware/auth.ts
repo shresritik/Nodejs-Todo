@@ -5,7 +5,8 @@ import { IRequest } from "../interface/auth";
 import { IUser } from "../interface/user";
 import { UnauthorizedError } from "../error";
 import { ROLE } from "../enum";
-
+import loggerWithNameSpace from "../utils/logger";
+const logger = loggerWithNameSpace("Authentication");
 //check for the authentication token in routes and verify it with jwt secret and store the response in request
 export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
@@ -20,8 +21,11 @@ export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   }
   try {
     const user = verify(token[1], config.jwt.secret!) as IUser;
+    logger.info("authenticate " + user.name);
+
     req.user = user;
   } catch (error) {
+    logger.error("Token failed");
     next(new UnauthorizedError("Token Failed"));
   }
   next();
@@ -35,12 +39,19 @@ export function authorize(permission: ROLE | ROLE[]) {
         if (!user?.permissions.includes(permission)) {
           next(new UnauthorizedError("Unauthorized"));
         }
+        logger.info("authorize " + permission);
       } else if (typeof permission == "object") {
-        if (permission.findIndex((p) => user?.permissions.includes(p)) == -1) {
+        const permit = permission.findIndex((p) =>
+          user?.permissions.includes(p)
+        );
+        if (permit == -1) {
           next(new UnauthorizedError("Unauthorized"));
         }
+        logger.info("authorize " + permission[permit]);
       }
     } catch (error) {
+      logger.error("Permission failed");
+
       next(new UnauthorizedError("Unauthorized"));
     }
     next();
