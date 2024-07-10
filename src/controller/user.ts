@@ -15,10 +15,15 @@ export async function createUser(
     const data = await UserService.createUser(body);
     logger.info("create a user");
     res.status(HttpStatusCode.CREATED).json(data);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new BadRequest(error.message));
+      next(new BadRequest(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new BadRequest("An unexpected error occurred"));
+    }
   }
 }
 //get all users or get user from a query name
@@ -29,10 +34,15 @@ export function getUsers(req: Request, res: Response, next: NextFunction) {
     logger.info("get user");
 
     res.status(HttpStatusCode.OK).json(data);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new NotFound(error.message));
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 }
 export async function updateUser(
@@ -47,10 +57,15 @@ export async function updateUser(
     logger.info("update user");
 
     res.status(HttpStatusCode.OK).json(data);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new NotFound(error.message));
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 }
 export function getUserById(req: Request, res: Response, next: NextFunction) {
@@ -60,8 +75,15 @@ export function getUserById(req: Request, res: Response, next: NextFunction) {
     logger.info("get user by id");
 
     res.status(HttpStatusCode.OK).json(data);
-  } catch (error: any) {
-    next(new NotFound(error.message));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 }
 export function deleteUserById(
@@ -75,9 +97,14 @@ export function deleteUserById(
     logger.info("delete user by id");
 
     res.status(HttpStatusCode.OK).json(data);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new NotFound(error.message));
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 }

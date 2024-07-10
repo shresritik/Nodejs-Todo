@@ -32,4 +32,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: shresritik/todo:2.${{ env.GIT_SHA }}
+          tags: shresritik/todo:3.${{ env.GIT_SHA }}

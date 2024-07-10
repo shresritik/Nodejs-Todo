@@ -40,10 +40,15 @@ export const readAllTodos = (
     const result = UserServices.getAllTodos(userId);
     logger.info("get all todos");
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new NotFound(error.message));
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 };
 //Read a todo by id
@@ -54,10 +59,15 @@ export const readTodo = (req: IRequest, res: Response, next: NextFunction) => {
     logger.info("get a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
 
-    next(new NotFound(error.message));
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 };
 //update a todo by id
@@ -72,9 +82,17 @@ export const updateTodo = (
     logger.info("update a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: any) {
-    if (error.message == "Status invalid") next(new BadRequest(error.message));
-    next(new NotFound(error.message));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message == "Status invalid")
+        next(new BadRequest(error.message));
+      logger.error(error.message);
+
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 };
 //Delete a todo by id
@@ -89,7 +107,14 @@ export const deleteTodo = (
     logger.info("delete a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: any) {
-    next(new NotFound(error.message));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      next(new NotFound(error.message));
+    } else {
+      logger.error("An unexpected error occurred");
+      next(new NotFound("An unexpected error occurred"));
+    }
   }
 };

@@ -8,21 +8,33 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const { body } = req;
     const data = await AuthService.login(body);
     res.status(HttpStatusCode.OK).json(data);
-  } catch (error: any) {
-    next(new BadRequest(error.message));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      next(new BadRequest(error.message));
+    } else {
+      next(new BadRequest("An unexpected error occurred"));
+    }
   }
 }
 //get new refresh and access tokens from the previous refresh token in header
 export async function refresh(req: Request, res: Response, next: NextFunction) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    next(new NotFound("No Token Found"));
-  } else {
-    const token = authorization.split(" ");
-    if (token.length != 2 || token[0] !== "Bearer") {
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
       next(new NotFound("No Token Found"));
+    } else {
+      const token = authorization.split(" ");
+      if (token.length != 2 || token[0] !== "Bearer") {
+        next(new NotFound("No Token Found"));
+      }
+      const data = await AuthService.refresh(token[1]);
+      res.json(data);
     }
-    const data = await AuthService.refresh(token[1]);
-    res.json(data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      next(new BadRequest(error.message));
+    } else {
+      next(new BadRequest("An unexpected error occurred"));
+    }
   }
 }
