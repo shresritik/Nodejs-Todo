@@ -1,19 +1,21 @@
+import { ROLE } from "../enum";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
+
 export const userData: IUser[] = [
   {
     id: 1,
     name: "shyam",
     email: "shyam@dsa.com",
     password: "$2b$10$jHHqrh4QLprCkIe8lwVwEuovsZL9gk6NOME04g.SEMHvyd1G7obI6",
-    permissions: ["super-admin"],
+    permissions: [ROLE.ADMIN],
   },
   {
     id: 2,
     name: "ram",
     email: "ram@asd.com",
     password: "$2b$10$ghbVSv1sFMuYIEh5PcRn/eTEtqSx8fE/YrXyP5m5834gnCxj5/IlO",
-    permissions: ["super-admin"],
+    permissions: [ROLE.ADMIN],
   },
 ];
 /**
@@ -25,7 +27,7 @@ export function createUser(user: IUser) {
   userData.push({
     ...user,
     id: userData.length + 1,
-    permissions: ["user"],
+    permissions: [ROLE.USER],
   });
   return user;
 }
@@ -51,7 +53,10 @@ export function getUserByEmail(userEmail: string) {
 export function getUserById(id: number) {
   return userData.find(({ id: userID }) => userID === id);
 }
-export function updateUser(id: number, user: Pick<IUser, "email" | "name">) {
+export function updateUser(
+  id: number,
+  user: Pick<IUser, "email" | "name" | "password">
+) {
   const idx = userData.findIndex(({ id: userId }) => userId === id);
   if (idx == -1) {
     return { error: "No user found" };

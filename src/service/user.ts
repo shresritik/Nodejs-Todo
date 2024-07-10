@@ -14,8 +14,12 @@ export function getUsers(query: IQuery) {
 export function getUserByEmail(userEmail: string) {
   return UserModel.getUserByEmail(userEmail);
 }
-export function updateUser(id: number, body: Pick<IUser, "email" | "name">) {
-  return UserModel.updateUser(id, body);
+export async function updateUser(
+  id: number,
+  body: Pick<IUser, "email" | "name" | "password">
+) {
+  const hashPassword = await bcrypt.hash(body.password, 10);
+  return UserModel.updateUser(id, { ...body, password: hashPassword });
 }
 export function getUserById(id: number) {
   return UserModel.getUserById(id);

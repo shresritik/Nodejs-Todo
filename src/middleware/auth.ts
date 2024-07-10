@@ -4,6 +4,7 @@ import config from "../config";
 import { IRequest } from "../interface/auth";
 import { IUser } from "../interface/user";
 import { UnauthorizedError } from "../error/UnauthorizedError";
+import { ROLE } from "../enum";
 export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
   if (!authorization) {
@@ -23,7 +24,7 @@ export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   }
   next();
 }
-export function authorize(permission: string | string[]) {
+export function authorize(permission: ROLE | ROLE[]) {
   return (req: IRequest, res: Response, next: NextFunction) => {
     const user = req.user;
     try {

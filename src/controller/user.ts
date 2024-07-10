@@ -12,10 +12,10 @@ export function getUsers(req: Request, res: Response) {
   const data = UserService.getUsers(query);
   res.json(data);
 }
-export function updateUser(req: Request, res: Response) {
+export async function updateUser(req: Request, res: Response) {
   const { id } = req.params;
   const { body } = req;
-  const data = UserService.updateUser(parseInt(id), body);
+  const data = await UserService.updateUser(parseInt(id), body);
   res.json(data);
 }
 export function getUserById(req: Request, res: Response) {
