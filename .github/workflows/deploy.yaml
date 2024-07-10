@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - assignment-2
+      - assignment-3
   pull_request:
     branches:
-      - assignment-2
+      - assignment-3
 jobs:
   build:
     runs-on: ubuntu-latest
