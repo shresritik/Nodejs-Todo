@@ -64,9 +64,9 @@ docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:<latest_has
 | ------------- | ----------- | ------------------------------- | ------------------------------------------------- | ----------------- |
 | /projects     | POST        | Create a todo                   | name:string<br>status:ongoing,incomplete,complete | User              |
 | /projects     | GET         | Get all todos                   |                                                   | Super Admin, User |
-| /projects/:id | GET         | Get a todo                      | id:number                                         | Super Admin, User |
-| /projects/:id | PUT         | Update a todo                   | id:number                                         | User              |
-| /projects/:id | DELETE      | Delete a todo                   | id:number                                         | User              |
+| /projects/:id | GET         | Get a todo                      |                                                   | Super Admin, User |
+| /projects/:id | PUT         | Update a todo                   | name:string<br>status:ongoing,incomplete,complete | User              |
+| /projects/:id | DELETE      | Delete a todo                   |                                                   | User              |
 | /users        | POST        | Create a user                   | name:string<br>email:string<br>password:string    | Super Admin       |
 | /users/:id    | PUT         | Update a user                   | name:string<br>email:string<br>password:string    | Super Admin       |
 | /users/:id    | DELETE      | Delete a user                   |                                                   | Super Admin       |
