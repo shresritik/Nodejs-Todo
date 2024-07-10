@@ -1,4 +1,5 @@
 import { STATUS } from "../enum";
+import { TodoError } from "../error/TodoError";
 import { ITodo } from "../interface/todo";
 import { IError, ISuccess } from "../interface/todo";
 import { isValidStatus } from "../utils";
@@ -31,6 +32,7 @@ export const getTodo = (id: string, userId: number): ITodo | IError => {
     ({ id: todoId, userId: userid }) =>
       todoId === parseInt(id) && userid === userId
   );
+
   if (result == -1) return { error: "No such id found" };
   return data[result];
 };
@@ -41,9 +43,13 @@ export const getTodo = (id: string, userId: number): ITodo | IError => {
  */
 export const createTodo = (todo: ITodo, userId: number): ISuccess | IError => {
   if (!isValidStatus(todo.status)) {
-    return { error: "Status invalid" };
+    throw new Error("Status invalid");
   }
-  if (!todo.name || todo.name.length == 0) return { error: "Name invalid" };
+  if (!todo.name || todo.name.length == 0) {
+    throw new Error("Name invalid");
+
+    // return { error: "Name invalid" };
+  }
   data.push({
     id: data.length + 1,
     name: todo.name,
@@ -64,13 +70,13 @@ export const updateTodo = (
   userId: number
 ): ISuccess | IError => {
   if (todo.status && !isValidStatus(todo.status)) {
-    return { error: "Status invalid" };
+    throw new Error("Status invalid");
   }
   const result = data.findIndex(
     ({ id: todoId, userId: userid }) =>
       todoId === parseInt(id) && userid === userId
   );
-  if (result == -1) return { error: "No such id found" };
+  if (result == -1) throw new Error("No such id found");
   data[result] = { ...data[result], ...todo, userId };
   return { message: "success" };
 };
@@ -88,6 +94,6 @@ export const deleteTodo = (id: string, userId: number): ISuccess | IError => {
     data.splice(index, 1);
     return { message: "Deleted" };
   } else {
-    return { error: "No such id found" };
+    throw new Error("No such id found");
   }
 };
