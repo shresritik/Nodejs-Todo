@@ -5,13 +5,15 @@ export const userData: IUser[] = [
     id: 1,
     name: "shyam",
     email: "shyam@dsa.com",
-    password: "$2b$10$YhJ5jlYyVJYgCdZh/VSkLef5IQxM9e.riexIpwjBsdIMhTLx.f/W6",
+    password: "$2b$10$jHHqrh4QLprCkIe8lwVwEuovsZL9gk6NOME04g.SEMHvyd1G7obI6",
+    permissions: ["super-admin"],
   },
   {
     id: 2,
     name: "ram",
     email: "ram@asd.com",
     password: "$2b$10$ghbVSv1sFMuYIEh5PcRn/eTEtqSx8fE/YrXyP5m5834gnCxj5/IlO",
+    permissions: ["super-admin"],
   },
 ];
 /**
@@ -19,10 +21,11 @@ export const userData: IUser[] = [
  * @param user
 
  */
-export async function createUser(user: IUser) {
+export function createUser(user: IUser) {
   userData.push({
     ...user,
     id: userData.length + 1,
+    permissions: ["user"],
   });
   return user;
 }
@@ -44,4 +47,25 @@ export function getUsers(query: IQuery) {
  */
 export function getUserByEmail(userEmail: string) {
   return userData.find(({ email }) => email.includes(userEmail));
+}
+export function getUserById(id: number) {
+  return userData.find(({ id: userID }) => userID === id);
+}
+export function updateUser(id: number, user: Pick<IUser, "email" | "name">) {
+  const idx = userData.findIndex(({ id: userId }) => userId === id);
+  if (idx == -1) {
+    return { error: "No user found" };
+  } else {
+    userData[idx] = { ...userData[idx], ...user };
+    return { message: "User updated" };
+  }
+}
+export function deleteUserById(id: number) {
+  const idx = userData.findIndex(({ id: userID }) => userID === id);
+  if (idx == -1) {
+    return { error: "No user found" };
+  } else {
+    userData.splice(idx, 1);
+    return { message: "User deleted" };
+  }
 }

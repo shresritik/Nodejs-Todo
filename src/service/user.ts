@@ -14,3 +14,12 @@ export function getUsers(query: IQuery) {
 export function getUserByEmail(userEmail: string) {
   return UserModel.getUserByEmail(userEmail);
 }
+export function updateUser(id: number, body: Pick<IUser, "email" | "name">) {
+  return UserModel.updateUser(id, body);
+}
+export function getUserById(id: number) {
+  return UserModel.getUserById(id);
+}
+export function deleteUserById(id: number) {
+  return UserModel.deleteUserById(id);
+}

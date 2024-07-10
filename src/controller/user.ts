@@ -12,3 +12,19 @@ export function getUsers(req: Request, res: Response) {
   const data = UserService.getUsers(query);
   res.json(data);
 }
+export function updateUser(req: Request, res: Response) {
+  const { id } = req.params;
+  const { body } = req;
+  const data = UserService.updateUser(parseInt(id), body);
+  res.json(data);
+}
+export function getUserById(req: Request, res: Response) {
+  const { id } = req.params;
+  const data = UserService.getUserById(parseInt(id));
+  res.json(data);
+}
+export function deleteUserById(req: Request, res: Response) {
+  const { id } = req.params;
+  const data = UserService.deleteUserById(parseInt(id));
+  res.json(data);
+}

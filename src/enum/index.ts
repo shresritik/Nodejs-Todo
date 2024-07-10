@@ -3,3 +3,7 @@ export enum STATUS {
   ONGOING = "ongoing",
   COMPLETE = "complete",
 }
+export enum ROLE {
+  ADMIN = "super-admin",
+  USER = "user",
+}

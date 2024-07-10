@@ -9,7 +9,9 @@ import { signUser } from "../utils";
  * @param body email|password
  * @returns {access token, refresh token}
  */
-export async function login(body: Pick<IUser, "email" | "password">) {
+export async function login(
+  body: Pick<IUser, "email" | "password" | "permissions">
+) {
   const existingUser = getUserByEmail(body.email);
   if (!existingUser) {
     return { error: "Invalid email or password" };
@@ -19,10 +21,11 @@ export async function login(body: Pick<IUser, "email" | "password">) {
     existingUser.password
   );
   if (!existingPasword) return { error: "Invalid email or password" };
-  const payload = {
+  const payload: Omit<IUser, "password"> = {
     id: existingUser.id,
     email: existingUser.email,
     name: existingUser.name,
+    permissions: existingUser.permissions,
   };
   return signUser(payload);
 }
