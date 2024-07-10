@@ -3,7 +3,7 @@
 ### Clone the repo
 
 ```bash
-git clone https://github.com/shresritik/Nodejs-Todo/tree/assignment-2
+git clone https://github.com/shresritik/Nodejs-Todo/tree/assignment-3
 ```
 
 ### Setup .env file
@@ -60,17 +60,29 @@ docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:<latest_has
 
 ### Routes
 
-| Endpoint      | HTTP Method | Description                     | body                                              | Authentication     |
-| ------------- | ----------- | ------------------------------- | ------------------------------------------------- | ------------------ |
-| /projects     | POST        | Create a todo                   | name:string<br>status:ongoing,incomplete,complete |
-| /projects     | GET         | Get all todos                   |
-| /projects/:id | GET         | Get a todo                      | id:number                                         |
-| /projects/:id | PUT         | Update a todo                   | id:number                                         |
-| /projects/:id | DELETE      | Delete a todo                   | id:number                                         |
-| /users        | POST        | Create a user                   | name:string<br>email:string<br>password:string    |
-| /users        | GET         | Get all users                   |                                                   | :heavy_check_mark: |
-| /users?q=     | GET         | Get a user by name              | q=string                                          | :heavy_check_mark: |
+| Endpoint      | HTTP Method | Description                     | body                                              | Authorization     |
+| ------------- | ----------- | ------------------------------- | ------------------------------------------------- | ----------------- |
+| /projects     | POST        | Create a todo                   | name:string<br>status:ongoing,incomplete,complete | User              |
+| /projects     | GET         | Get all todos                   |                                                   | Super Admin, User |
+| /projects/:id | GET         | Get a todo                      | id:number                                         | Super Admin, User |
+| /projects/:id | PUT         | Update a todo                   | id:number                                         | User              |
+| /projects/:id | DELETE      | Delete a todo                   | id:number                                         | User              |
+| /users        | POST        | Create a user                   | name:string<br>email:string<br>password:string    | Super Admin       |
+| /users/:id    | PUT         | Update a user                   | name:string<br>email:string<br>password:string    | Super Admin       |
+| /users/:id    | DELETE      | Delete a user                   |                                                   | Super Admin       |
+| /users        | GET         | Get all users                   |                                                   | Super Admin       |
+| /users/:id    | GET         | Get a user                      |                                                   | Super Admin       |
+| /users?q=     | GET         | Get a user by name              | q=string                                          | Super Admin       |
 | /auth/login   | POST        | login a user                    | email:string<br>password:string                   |
-| /auth/refresh | POST        | Create refresh and access token |                                                   | :heavy_check_mark: |
+| /auth/refresh | POST        | Create refresh and access token |                                                   |                   |
 
 _Note: For Authentication provide Bearer `token` in headers_
+
+### Steps
+
+1. Get Super admin access token from /auth/login
+2. Perform CRUD operations on users with that access token in /users
+3. Get user access token from /auth/login using the created user credentials
+4. Perform CRUD operation on Todo with that access token in /projects
+
+_Note: User can only perform CRUD on its todo and super admin can only perform CRUD on the users_
