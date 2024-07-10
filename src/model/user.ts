@@ -2,7 +2,7 @@ import { ROLE } from "../enum";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
 import loggerWithNameSpace from "../utils/logger";
-const logger = loggerWithNameSpace("UserController");
+const logger = loggerWithNameSpace("UserModel");
 export const userData: IUser[] = [
   {
     id: 1,
@@ -28,12 +28,16 @@ export function createUser(user: IUser) {
   logger.info("create a user");
   if (
     !user ||
+    !user.email ||
+    !user.password ||
+    !user.name ||
     user.email.length == 0 ||
     user.password.length == 0 ||
     user.name.length == 0 ||
     user.password.length == 0
   )
     throw new Error("User details is not complete");
+
   userData.push({
     ...user,
     id: userData.length + 1,
