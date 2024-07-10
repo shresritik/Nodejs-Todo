@@ -10,7 +10,7 @@ import { authenticate, authorize } from "../middleware/auth";
 import { ROLE } from "../enum";
 const router = express();
 // route handler to create a todo
-router.post("/", createTodo);
+router.post("/", authenticate, authorize(ROLE.USER), createTodo);
 // route handler to read all todos
 router.get("/", authenticate, authorize([ROLE.USER, ROLE.ADMIN]), readAllTodos);
 // route handler to read a todos by id

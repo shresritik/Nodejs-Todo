@@ -14,13 +14,13 @@ export async function login(
 ) {
   const existingUser = getUserByEmail(body.email);
   if (!existingUser) {
-    return { error: "Invalid email or password" };
+    throw new Error("Invalid email or password");
   }
   const existingPasword = await bcrypt.compare(
     body.password,
     existingUser.password
   );
-  if (!existingPasword) return { error: "Invalid email or password" };
+  if (!existingPasword) throw new Error("Invalid email or password");
   const payload: Omit<IUser, "password"> = {
     id: existingUser.id,
     email: existingUser.email,

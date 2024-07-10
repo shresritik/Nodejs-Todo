@@ -1,7 +1,8 @@
 import { ROLE } from "../enum";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
-
+import loggerWithNameSpace from "../utils/logger";
+const logger = loggerWithNameSpace("UserController");
 export const userData: IUser[] = [
   {
     id: 1,
@@ -24,6 +25,15 @@ export const userData: IUser[] = [
 
  */
 export function createUser(user: IUser) {
+  logger.info("create a user");
+  if (
+    !user ||
+    user.email.length == 0 ||
+    user.password.length == 0 ||
+    user.name.length == 0 ||
+    user.password.length == 0
+  )
+    throw new Error("User details is not complete");
   userData.push({
     ...user,
     id: userData.length + 1,
@@ -37,9 +47,11 @@ export function createUser(user: IUser) {
  * @returns user
  */
 export function getUsers(query: IQuery) {
+  logger.info("get users");
   if (query.q) {
     return userData.find(({ name }) => name === query.q);
   }
+  if (userData.length == 0) throw new Error("User Data is Empty");
   return userData;
 }
 /**
@@ -48,27 +60,51 @@ export function getUsers(query: IQuery) {
  * @returns user
  */
 export function getUserByEmail(userEmail: string) {
-  return userData.find(({ email }) => email.includes(userEmail));
+  logger.info("get users by email");
+  const result = userData.find(({ email }) => email.includes(userEmail));
+  if (!result) throw new Error("No user found");
+  return result;
 }
+/**
+ * get user by its id
+ * @param id :number
+ * @returns user
+ */
 export function getUserById(id: number) {
-  return userData.find(({ id: userID }) => userID === id);
+  logger.info("get user by id " + id);
+  const result = userData.find(({ id: userID }) => userID === id);
+  if (!result) throw new Error("No user found");
+  return result;
 }
+/**
+ * update a user by id
+ * @param id number
+ * @param user
+ * @returns success or error
+ */
 export function updateUser(
   id: number,
   user: Pick<IUser, "email" | "name" | "password">
 ) {
+  logger.info("update user by id " + id);
   const idx = userData.findIndex(({ id: userId }) => userId === id);
   if (idx == -1) {
-    return { error: "No user found" };
+    throw new Error("No user found");
   } else {
     userData[idx] = { ...userData[idx], ...user };
     return { message: "User updated" };
   }
 }
+/**
+ * deletes a user by id
+ * @param id number
+ * @returns success or error
+ */
 export function deleteUserById(id: number) {
+  logger.info("delete user by id " + id);
   const idx = userData.findIndex(({ id: userID }) => userID === id);
   if (idx == -1) {
-    return { error: "No user found" };
+    throw new Error("No user found");
   } else {
     userData.splice(idx, 1);
     return { message: "User deleted" };

@@ -14,6 +14,7 @@ export function getUsers(query: IQuery) {
 export function getUserByEmail(userEmail: string) {
   return UserModel.getUserByEmail(userEmail);
 }
+//update user by its email and hash its password
 export async function updateUser(
   id: number,
   body: Pick<IUser, "email" | "name" | "password">
@@ -21,9 +22,11 @@ export async function updateUser(
   const hashPassword = await bcrypt.hash(body.password, 10);
   return UserModel.updateUser(id, { ...body, password: hashPassword });
 }
+// get user by its id
 export function getUserById(id: number) {
   return UserModel.getUserById(id);
 }
+// delete user by its id
 export function deleteUserById(id: number) {
   return UserModel.deleteUserById(id);
 }

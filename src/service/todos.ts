@@ -1,8 +1,7 @@
-import { IError, ISuccess, ITodo } from "../interface/todo";
-import { IUser } from "../interface/user";
+import { ITodo } from "../interface/todo";
 import * as TodoModel from "../model/todos";
 //read all todos from the models
-export const getAllTodos = (userId: number): ITodo[] => {
+export const getAllTodos = (userId: number) => {
   return TodoModel.getAllTodos(userId);
 };
 /**
@@ -11,7 +10,7 @@ export const getAllTodos = (userId: number): ITodo[] => {
  * @returns todo object
  */
 
-export const getTodo = (id: string, userId: number): ITodo | IError => {
+export const getTodo = (id: string, userId: number) => {
   return TodoModel.getTodo(id, userId);
 };
 /**
@@ -19,7 +18,7 @@ export const getTodo = (id: string, userId: number): ITodo | IError => {
  * @param todo object
  * @returns success or error if status or name is invalid
  */
-export const createTodo = (todo: ITodo, userId: number): ISuccess | IError => {
+export const createTodo = (todo: ITodo, userId: number) => {
   return TodoModel.createTodo(todo, userId);
 };
 /**
@@ -28,11 +27,7 @@ export const createTodo = (todo: ITodo, userId: number): ISuccess | IError => {
  * @param todo todo object
  * @returns success or error if status or id is invalid
  */
-export const updateTodo = (
-  id: string,
-  todo: ITodo,
-  userId: number
-): ISuccess | IError => {
+export const updateTodo = (id: string, todo: ITodo, userId: number) => {
   return TodoModel.updateTodo(id, todo, userId);
 };
 /**
@@ -40,6 +35,6 @@ export const updateTodo = (
  * @param id string
  * @returns success or error if id is invalid
  */
-export const deleteTodo = (id: string, userId: number): ISuccess | IError => {
+export const deleteTodo = (id: string, userId: number) => {
   return TodoModel.deleteTodo(id, userId);
 };

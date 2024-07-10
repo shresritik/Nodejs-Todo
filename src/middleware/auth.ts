@@ -3,8 +3,10 @@ import { verify } from "jsonwebtoken";
 import config from "../config";
 import { IRequest } from "../interface/auth";
 import { IUser } from "../interface/user";
-import { UnauthorizedError } from "../error/UnauthorizedError";
+import { UnauthorizedError } from "../error";
 import { ROLE } from "../enum";
+
+//check for the authentication token in routes and verify it with jwt secret and store the response in request
 export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
   if (!authorization) {
@@ -24,6 +26,7 @@ export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   }
   next();
 }
+//check permission for super-admin or user in routes
 export function authorize(permission: ROLE | ROLE[]) {
   return (req: IRequest, res: Response, next: NextFunction) => {
     const user = req.user;
@@ -34,7 +37,6 @@ export function authorize(permission: ROLE | ROLE[]) {
         }
       } else if (typeof permission == "object") {
         if (permission.findIndex((p) => user?.permissions.includes(p)) == -1) {
-          console.log("here");
           next(new UnauthorizedError("Unauthorized"));
         }
       }

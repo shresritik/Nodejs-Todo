@@ -10,6 +10,11 @@ import { IUser } from "../interface/user";
 export function isValidStatus(response: string): boolean {
   return Object.values(STATUS).includes(response as STATUS);
 }
+/**
+ * sign the user with its payload and jwt secret
+ * @param payload
+ * @returns { accessToken, refreshToken }
+ */
 export function signUser(payload: Pick<IUser, "id" | "email" | "name">) {
   const accessToken = sign(payload, config.jwt.secret!, {
     expiresIn: config.jwt.accessTokenExpiryMS,
