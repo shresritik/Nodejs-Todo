@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - assignment-3
+      - assignment-4
   pull_request:
     branches:
-      - assignment-3
+      - assignment-4
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,4 +32,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: shresritik/todo:3.${{ env.GIT_SHA }}
+          tags: shresritik/todo:4.${{ env.GIT_SHA }}

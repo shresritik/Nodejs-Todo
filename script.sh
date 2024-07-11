@@ -22,5 +22,5 @@ else
     exit 1
 fi
 # Pull the Docker image tagged with the latest commit hash
-docker pull ${DOCKER_REPO}:3.${latest_commit_hash}
-docker run -p ${HOST_PORT}:${HOST_PORT} --env-file=${ENV_FILE} ${DOCKER_REPO}:3.${latest_commit_hash}
+docker pull ${DOCKER_REPO}:4.${latest_commit_hash}
+docker run -p ${HOST_PORT}:${HOST_PORT} --env-file=${ENV_FILE} ${DOCKER_REPO}:4.${latest_commit_hash}
