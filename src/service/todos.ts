@@ -1,8 +1,15 @@
+import { BadRequest, NotFound } from "../error";
 import { ITodo } from "../interface/todo";
 import * as TodoModel from "../model/todos";
+import { isValidStatus } from "../utils";
+import loggerWithNameSpace from "../utils/logger";
+const logger = loggerWithNameSpace("TodoService");
 //read all todos from the models
 export const getAllTodos = (userId: number) => {
-  return TodoModel.getAllTodos(userId);
+  const result = TodoModel.getAllTodos(userId);
+  if (!result || result.length == 0) throw new NotFound("No data found");
+  logger.info("Get all Todos");
+  return result;
 };
 /**
  * read a todo by id
@@ -11,7 +18,11 @@ export const getAllTodos = (userId: number) => {
  */
 
 export const getTodo = (id: string, userId: number) => {
-  return TodoModel.getTodo(id, userId);
+  const result = TodoModel.getTodoById(id, userId);
+  if (!result) throw new NotFound("No todo found by id " + id);
+  logger.info("Get Todo by id " + id);
+
+  return result;
 };
 /**
  * create a todo
@@ -19,6 +30,13 @@ export const getTodo = (id: string, userId: number) => {
  * @returns success or error if status or name is invalid
  */
 export const createTodo = (todo: ITodo, userId: number) => {
+  if (!isValidStatus(todo.status)) {
+    throw new BadRequest("Status invalid");
+  }
+  if (!todo.name || todo.name.length == 0) {
+    throw new BadRequest("Name invalid");
+  }
+  logger.info("Create a Todo");
   return TodoModel.createTodo(todo, userId);
 };
 /**
@@ -28,7 +46,13 @@ export const createTodo = (todo: ITodo, userId: number) => {
  * @returns success or error if status or id is invalid
  */
 export const updateTodo = (id: string, todo: ITodo, userId: number) => {
-  return TodoModel.updateTodo(id, todo, userId);
+  const result = TodoModel.getAllTodos(userId);
+  if (!result || result.length == 0) throw new NotFound("No data found");
+  if (todo.status && !isValidStatus(todo.status)) {
+    throw new BadRequest("Status invalid");
+  }
+  logger.info("Update a Todo by id " + id);
+  return TodoModel.updateTodo(parseInt(id), todo, userId);
 };
 /**
  * delete a todo by id
@@ -36,5 +60,9 @@ export const updateTodo = (id: string, todo: ITodo, userId: number) => {
  * @returns success or error if id is invalid
  */
 export const deleteTodo = (id: string, userId: number) => {
-  return TodoModel.deleteTodo(id, userId);
+  const checkUser = TodoModel.getTodoById(id, userId);
+  if (!checkUser) throw new NotFound("No todo found by id " + id);
+  TodoModel.deleteTodo(id);
+  logger.info("Delete a Todo by id " + id);
+  return { message: "Deleted" };
 };

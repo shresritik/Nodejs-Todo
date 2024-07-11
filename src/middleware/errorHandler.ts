@@ -5,7 +5,9 @@ import { BadRequest, NotFound, UnauthorizedError } from "../error";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("ErrorHandler");
 export function notFound(req: IRequest, res: Response) {
-  return res.status(HttpStatusCode.NOT_FOUND).json({ message: "Not Found" });
+  return res
+    .status(HttpStatusCode.NOT_FOUND)
+    .json({ message: "Route Not Found" });
 }
 //generic error handler to send the status codes and error message for particular errors
 export function genericErrorHandler(

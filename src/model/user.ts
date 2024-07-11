@@ -11,13 +11,6 @@ export const userData: IUser[] = [
     password: "$2b$10$jHHqrh4QLprCkIe8lwVwEuovsZL9gk6NOME04g.SEMHvyd1G7obI6",
     permissions: [ROLE.ADMIN],
   },
-  {
-    id: 2,
-    name: "ram",
-    email: "ram@asd.com",
-    password: "$2b$10$ghbVSv1sFMuYIEh5PcRn/eTEtqSx8fE/YrXyP5m5834gnCxj5/IlO",
-    permissions: [ROLE.ADMIN],
-  },
 ];
 /**
  * push the user in the array
@@ -26,24 +19,15 @@ export const userData: IUser[] = [
  */
 export function createUser(user: IUser) {
   logger.info("create a user");
-  if (
-    !user ||
-    !user.email ||
-    !user.password ||
-    !user.name ||
-    user.email.length == 0 ||
-    user.password.length == 0 ||
-    user.name.length == 0 ||
-    user.password.length == 0
-  )
-    throw new Error("User details is not complete");
-
-  userData.push({
-    ...user,
+  const data = {
     id: userData.length + 1,
+    name: user.name,
+    password: user.password,
+    email: user.email,
     permissions: [ROLE.USER],
-  });
-  return user;
+  };
+  userData.push(data);
+  return data;
 }
 /**
  * get all the users or a user based on the query
@@ -55,7 +39,6 @@ export function getUsers(query: IQuery) {
   if (query.q) {
     return userData.find(({ name }) => name === query.q);
   }
-  if (userData.length == 0) throw new Error("User Data is Empty");
   return userData;
 }
 /**
@@ -66,7 +49,6 @@ export function getUsers(query: IQuery) {
 export function getUserByEmail(userEmail: string) {
   logger.info("get users by email");
   const result = userData.find(({ email }) => email.includes(userEmail));
-  if (!result) throw new Error("No user found");
   return result;
 }
 /**
@@ -77,7 +59,6 @@ export function getUserByEmail(userEmail: string) {
 export function getUserById(id: number) {
   logger.info("get user by id " + id);
   const result = userData.find(({ id: userID }) => userID === id);
-  if (!result) throw new Error("No user found");
   return result;
 }
 /**
@@ -90,14 +71,14 @@ export function updateUser(
   id: number,
   user: Pick<IUser, "email" | "name" | "password">
 ) {
-  logger.info("update user by id " + id);
-  const idx = userData.findIndex(({ id: userId }) => userId === id);
-  if (idx == -1) {
-    throw new Error("No user found");
-  } else {
-    userData[idx] = { ...userData[idx], ...user };
-    return { message: "User updated" };
-  }
+  const data = {
+    id: userData.length + 1,
+    name: user.name,
+    email: user.email,
+    permissions: [ROLE.USER],
+  };
+  userData[id] = { ...userData[id], ...data };
+  return userData[id];
 }
 /**
  * deletes a user by id
@@ -106,11 +87,5 @@ export function updateUser(
  */
 export function deleteUserById(id: number) {
   logger.info("delete user by id " + id);
-  const idx = userData.findIndex(({ id: userID }) => userID === id);
-  if (idx == -1) {
-    throw new Error("No user found");
-  } else {
-    userData.splice(idx, 1);
-    return { message: "User deleted" };
-  }
+  userData.splice(id - 1, 1);
 }

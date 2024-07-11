@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import * as UserServices from "../service/todos";
 import { IRequest } from "../interface/auth";
 import HttpStatusCode from "http-status-codes";
-import { BadRequest, NotFound } from "../error";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("TodoController");
 // Create a todo
@@ -18,15 +17,9 @@ export const createTodo = (
     const result = UserServices.createTodo(body, userId);
     logger.info("create a todo");
     res.status(HttpStatusCode.CREATED).json(result);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      logger.error(error.message);
-
-      next(new BadRequest(error.message));
-    } else {
-      logger.error("An unexpected error occurred");
-      next(new BadRequest("An unexpected error occurred"));
-    }
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };
 //Read all todos
@@ -40,15 +33,9 @@ export const readAllTodos = (
     const result = UserServices.getAllTodos(userId);
     logger.info("get all todos");
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      logger.error(error.message);
-
-      next(new NotFound(error.message));
-    } else {
-      logger.error("An unexpected error occurred");
-      next(new NotFound("An unexpected error occurred"));
-    }
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };
 //Read a todo by id
@@ -59,15 +46,9 @@ export const readTodo = (req: IRequest, res: Response, next: NextFunction) => {
     logger.info("get a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      logger.error(error.message);
-
-      next(new NotFound(error.message));
-    } else {
-      logger.error("An unexpected error occurred");
-      next(new NotFound("An unexpected error occurred"));
-    }
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };
 //update a todo by id
@@ -82,17 +63,9 @@ export const updateTodo = (
     logger.info("update a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (error.message == "Status invalid")
-        next(new BadRequest(error.message));
-      logger.error(error.message);
-
-      next(new NotFound(error.message));
-    } else {
-      logger.error("An unexpected error occurred");
-      next(new NotFound("An unexpected error occurred"));
-    }
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };
 //Delete a todo by id
@@ -105,16 +78,9 @@ export const deleteTodo = (
     const userId = Number(req.user?.id);
     const result = UserServices.deleteTodo(req.params.id, userId);
     logger.info("delete a todo by id " + userId);
-
     res.status(HttpStatusCode.OK).json(result);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      logger.error(error.message);
-
-      next(new NotFound(error.message));
-    } else {
-      logger.error("An unexpected error occurred");
-      next(new NotFound("An unexpected error occurred"));
-    }
+  } catch (error) {
+    logger.error(error);
+    next(error);
   }
 };
