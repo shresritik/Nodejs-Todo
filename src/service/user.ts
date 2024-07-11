@@ -1,4 +1,4 @@
-import { BadRequest, NotFound } from "../error";
+import { NotFound } from "../error";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
 import * as UserModel from "../model/user";
@@ -7,18 +7,6 @@ import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("UserService");
 // create a user and hash its password
 export async function createUser(user: IUser) {
-  if (
-    !user ||
-    !user.email ||
-    !user.password ||
-    !user.name ||
-    user.email.length == 0 ||
-    user.password.length == 0 ||
-    user.name.length == 0 ||
-    user.password.length == 0
-  ) {
-    throw new BadRequest("User details is not complete");
-  }
   const hashPassword = await bcrypt.hash(user.password, 10);
   logger.info("create a user");
   return UserModel.createUser({ ...user, password: hashPassword });
@@ -43,17 +31,18 @@ export function getUserByEmail(userEmail: string) {
 //update user by its email and hash its password
 export async function updateUser(
   id: number,
-  body: Pick<IUser, "email" | "name" | "password">
+  body: Pick<IUser, "email" | "name" | "password" | "id">
 ) {
   const hashPassword = await bcrypt.hash(body.password, 10);
   logger.info("Check user by id " + id);
-  const checkUser = UserModel.getUserById(id);
+  const oldUser = UserModel.getUserById(id);
 
-  if (checkUser) {
-    const result = UserModel.updateUser(id, {
+  if (oldUser) {
+    const result = UserModel.updateUser(oldUser, {
       ...body,
       password: hashPassword,
     });
+
     logger.info("Update user by id " + id);
 
     return result;
@@ -79,7 +68,7 @@ export function deleteUserById(id: number) {
   const checkUser = UserModel.getUserById(id);
   if (checkUser) {
     logger.info("Delete user by id " + id);
-    UserModel.deleteUserById(id);
+    UserModel.deleteUserById(checkUser.id);
     return { message: "User deleted" };
   } else {
     throw new NotFound("No user found with the id " + id);

@@ -3,7 +3,7 @@ import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("UserModel");
-export const userData: IUser[] = [
+export let userData: IUser[] = [
   {
     id: 1,
     name: "shyam",
@@ -68,17 +68,17 @@ export function getUserById(id: number) {
  * @returns success or error
  */
 export function updateUser(
-  id: number,
-  user: Pick<IUser, "email" | "name" | "password">
+  oldUser: IUser,
+  newUser: Omit<IUser, "permissions">
 ) {
   const data = {
-    id: userData.length + 1,
-    name: user.name,
-    email: user.email,
+    ...newUser,
     permissions: [ROLE.USER],
   };
-  userData[id] = { ...userData[id], ...data };
-  return userData[id];
+  Object.assign(oldUser, data);
+  // oldUser = { ...oldUser, ...data };
+  // userData[id] = { ...userData[id], ...data };
+  return data;
 }
 /**
  * deletes a user by id
@@ -87,5 +87,5 @@ export function updateUser(
  */
 export function deleteUserById(id: number) {
   logger.info("delete user by id " + id);
-  userData.splice(id - 1, 1);
+  userData = userData.filter(({ id: userId }) => userId !== id);
 }
