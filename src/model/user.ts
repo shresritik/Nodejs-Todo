@@ -1,3 +1,4 @@
+import config from "../config";
 import { ROLE } from "../enum";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
@@ -8,7 +9,7 @@ export let userData: IUser[] = [
     id: 1,
     name: "shyam",
     email: "shyam@dsa.com",
-    password: "$2b$10$jHHqrh4QLprCkIe8lwVwEuovsZL9gk6NOME04g.SEMHvyd1G7obI6",
+    password: config.password!,
     permissions: [ROLE.ADMIN],
   },
 ];
