@@ -2,7 +2,7 @@ import { STATUS } from "../enum";
 import { ITodo } from "../interface/todo";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("TodoModel");
-export const data: ITodo[] = [
+export let data: ITodo[] = [
   {
     id: 1,
     name: "Wash Dishes",
@@ -31,12 +31,12 @@ export const getAllTodos = (userId: number) => {
 
 export const getTodoById = (id: string, userId: number) => {
   logger.info("get a todo by id " + id);
-  const result = data.findIndex(
+  const result = data.find(
     ({ id: todoId, userId: userid }) =>
       todoId === parseInt(id) && userid === userId
   );
 
-  return data[result];
+  return result;
 };
 /**
  * create a todo for a user
@@ -61,9 +61,8 @@ export const createTodo = (todo: ITodo, userId: number) => {
  * @param userId number
  * @returns success or error if status or id is invalid
  */
-export const updateTodo = (id: number, todo: ITodo, userId: number) => {
-  logger.info("update a todo by id " + id);
-  data[id] = { ...data[id], ...todo, userId };
+export const updateTodo = (oldTodo: ITodo, todo: ITodo) => {
+  Object.assign(oldTodo, todo);
   return { message: "success" };
 };
 /**
@@ -72,6 +71,6 @@ export const updateTodo = (id: number, todo: ITodo, userId: number) => {
  * @param userId number
  * @returns success or error if id is invalid
  */
-export const deleteTodo = (id: string) => {
-  const res = data.splice(parseInt(id) - 1, 1);
+export const deleteTodo = (id: number) => {
+  data = data.filter(({ id: dataId }) => dataId !== id);
 };

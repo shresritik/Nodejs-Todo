@@ -46,13 +46,13 @@ export const createTodo = (todo: ITodo, userId: number) => {
  * @returns success or error if status or id is invalid
  */
 export const updateTodo = (id: string, todo: ITodo, userId: number) => {
-  const result = TodoModel.getAllTodos(userId);
-  if (!result || result.length == 0) throw new NotFound("No data found");
+  const oldResult = TodoModel.getTodoById(id, userId);
+  if (!oldResult) throw new NotFound("No todo found by id " + id);
   if (todo.status && !isValidStatus(todo.status)) {
     throw new BadRequest("Status invalid");
   }
   logger.info("Update a Todo by id " + id);
-  return TodoModel.updateTodo(parseInt(id), todo, userId);
+  return TodoModel.updateTodo(oldResult, todo);
 };
 /**
  * delete a todo by id
@@ -62,7 +62,7 @@ export const updateTodo = (id: string, todo: ITodo, userId: number) => {
 export const deleteTodo = (id: string, userId: number) => {
   const checkUser = TodoModel.getTodoById(id, userId);
   if (!checkUser) throw new NotFound("No todo found by id " + id);
-  TodoModel.deleteTodo(id);
+  TodoModel.deleteTodo(checkUser.id);
   logger.info("Delete a Todo by id " + id);
   return { message: "Deleted" };
 };

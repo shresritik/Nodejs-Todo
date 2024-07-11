@@ -43,14 +43,14 @@ export function getUserByEmail(userEmail: string) {
 //update user by its email and hash its password
 export async function updateUser(
   id: number,
-  body: Pick<IUser, "email" | "name" | "password">
+  body: Pick<IUser, "email" | "name" | "password" | "id">
 ) {
   const hashPassword = await bcrypt.hash(body.password, 10);
   logger.info("Check user by id " + id);
-  const checkUser = UserModel.getUserById(id);
+  const oldUser = UserModel.getUserById(id);
 
-  if (checkUser) {
-    const result = UserModel.updateUser(id, {
+  if (oldUser) {
+    const result = UserModel.updateUser(oldUser, {
       ...body,
       password: hashPassword,
     });
@@ -79,7 +79,7 @@ export function deleteUserById(id: number) {
   const checkUser = UserModel.getUserById(id);
   if (checkUser) {
     logger.info("Delete user by id " + id);
-    UserModel.deleteUserById(id);
+    UserModel.deleteUserById(checkUser.id);
     return { message: "User deleted" };
   } else {
     throw new NotFound("No user found with the id " + id);
