@@ -1,5 +1,4 @@
 import { sign } from "jsonwebtoken";
-import { STATUS } from "../enum";
 import config from "../config";
 import { IUser } from "../interface/user";
 /**

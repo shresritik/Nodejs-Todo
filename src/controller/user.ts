@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import * as UserService from "../service/user";
 import HttpStatusCode from "http-status-codes";
-import { BadRequest, NotFound } from "../error";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("UserController");
 //create a user
@@ -21,12 +20,13 @@ export async function createUser(
   }
 }
 //get all users or get user from a query name
-export function getUsers(req: Request, res: Response, next: NextFunction) {
+export function getUsers(req: Request, res: Response) {
   const { query } = req;
   const data = UserService.getUsers(query);
   logger.info("get user");
   res.status(HttpStatusCode.OK).json(data);
 }
+// update user by id
 export async function updateUser(
   req: Request,
   res: Response,
@@ -44,6 +44,7 @@ export async function updateUser(
     next(error);
   }
 }
+// get user by id
 export function getUserById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
@@ -56,6 +57,7 @@ export function getUserById(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+// delete user by id
 export function deleteUserById(
   req: Request,
   res: Response,

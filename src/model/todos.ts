@@ -73,5 +73,4 @@ export const updateTodo = (oldTodo: ITodo, todo: ITodo) => {
  */
 export const deleteTodo = (id: number) => {
   data = data.filter(({ id: dataId }) => dataId !== id);
-  console.log(data);
 };

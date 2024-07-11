@@ -15,7 +15,6 @@ export let userData: IUser[] = [
 /**
  * push the user in the array
  * @param user
-
  */
 export function createUser(user: IUser) {
   logger.info("create a user");
@@ -75,9 +74,8 @@ export function updateUser(
     ...newUser,
     permissions: [ROLE.USER],
   };
+  logger.info("update user");
   Object.assign(oldUser, data);
-  // oldUser = { ...oldUser, ...data };
-  // userData[id] = { ...userData[id], ...data };
   return data;
 }
 /**

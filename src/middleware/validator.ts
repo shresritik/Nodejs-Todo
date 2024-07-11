@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Schema } from "joi";
 import { BadRequest } from "../error";
-
+//validate request body
 export function validateReqBody(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = schema.validate(req.body);
@@ -10,6 +10,7 @@ export function validateReqBody(schema: Schema) {
     next();
   };
 }
+//validate request query
 export function validateReqQuery(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = schema.validate(req.query);
@@ -18,6 +19,8 @@ export function validateReqQuery(schema: Schema) {
     next();
   };
 }
+
+//validate request param
 export function validateReqId(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = schema.validate(req.params);
