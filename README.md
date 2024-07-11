@@ -77,4 +77,5 @@ _Note: For Authentication provide Bearer `token` in headers_
 3. Get user access token from /auth/login using the created user credentials
 4. Perform CRUD operation on Todo with that access token in /projects
 
-_Note: User can only perform CRUD on its todo and super admin can only perform CRUD on the users_
+_Note: The email for super admin is shyam@dsa.com and the password needs to hashed and placed in .env._
+_User can only perform CRUD on its todo and super admin can only perform CRUD on the users_
