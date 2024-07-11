@@ -3,7 +3,7 @@
 ### Clone the repo
 
 ```bash
-git clone https://github.com/shresritik/Nodejs-Todo/tree/assignment-3
+git clone https://github.com/shresritik/Nodejs-Todo/tree/assignment-4
 ```
 
 ### Setup .env file
