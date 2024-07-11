@@ -13,7 +13,6 @@ export const createTodo = (
   try {
     const { body } = req;
     const userId = Number(req.user?.id);
-    console.log(req.user);
     const result = UserServices.createTodo(body, userId);
     logger.info("create a todo");
     res.status(HttpStatusCode.CREATED).json(result);

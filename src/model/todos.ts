@@ -50,7 +50,7 @@ export const createTodo = (todo: ITodo, userId: number) => {
     id: data.length + 1,
     name: todo.name,
     status: todo.status,
-    userId: userId == 1 ? userId + 1 : userId,
+    userId,
   });
   return { message: "success" };
 };
@@ -74,6 +74,4 @@ export const updateTodo = (id: number, todo: ITodo, userId: number) => {
  */
 export const deleteTodo = (id: string) => {
   const res = data.splice(parseInt(id) - 1, 1);
-  console.log(parseInt(id), res);
-  console.log(data);
 };
