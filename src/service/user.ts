@@ -36,7 +36,6 @@ export async function updateUser(
   const hashPassword = await bcrypt.hash(body.password, 10);
   logger.info("Check user by id " + id);
   const oldUser = UserModel.getUserById(id);
-
   if (oldUser) {
     const result = UserModel.updateUser(oldUser, {
       ...body,
@@ -47,6 +46,7 @@ export async function updateUser(
 
     return result;
   } else {
+    console.log("first");
     throw new NotFound("No user found with the id " + id);
   }
 }
