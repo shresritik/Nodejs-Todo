@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import config from "../config";
 import { IUser } from "../interface/user";
 /**
@@ -14,4 +14,10 @@ export function signUser(payload: Pick<IUser, "id" | "email" | "name">) {
     expiresIn: config.jwt.refreshTokenExpiryMS,
   });
   return { accessToken, refreshToken };
+}
+export function mockVerify(token: string) {
+  return verify(token, config.jwt.secret!) as Pick<
+    IUser,
+    "id" | "email" | "name"
+  >;
 }

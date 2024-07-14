@@ -1,9 +1,7 @@
-import { verify } from "jsonwebtoken";
 import { IUser } from "../interface/user";
 import { getUserByEmail } from "./user";
 import bcrypt from "bcrypt";
-import config from "../config";
-import { signUser } from "../utils";
+import { mockVerify, signUser } from "../utils";
 import { BadRequest } from "../error";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("AuthService");
@@ -40,10 +38,7 @@ export async function login(
  */
 export async function refresh(token: string) {
   try {
-    const { id, email, name } = verify(token, config.jwt.secret!) as Pick<
-      IUser,
-      "id" | "email" | "name"
-    >;
+    const { id, email, name } = mockVerify(token);
     const payload = {
       id,
       email,
