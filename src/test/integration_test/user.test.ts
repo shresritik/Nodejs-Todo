@@ -28,7 +28,7 @@ describe("User Integration Test Suite", () => {
     bcryptHashStub.resolves("hashedPassword");
     const response = await request(app)
       .post("/users")
-      .set("Authorization", `Bearer ${config.token}`)
+      .set("Authorization", `Bearer ${config.token.admin}`)
       .send(user);
     expect(response.status).toEqual(201);
     expect(response.body).toEqual({
@@ -43,7 +43,7 @@ describe("User Integration Test Suite", () => {
 
     const response = await request(app)
       .put("/users/1")
-      .set("Authorization", `Bearer ${config.token}`)
+      .set("Authorization", `Bearer ${config.token.admin}`)
       .send(user);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
@@ -55,7 +55,7 @@ describe("User Integration Test Suite", () => {
   it("Should get a user", async () => {
     const response = await request(app)
       .get("/users/1")
-      .set("Authorization", `Bearer ${config.token}`);
+      .set("Authorization", `Bearer ${config.token.admin}`);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...user,
@@ -67,14 +67,14 @@ describe("User Integration Test Suite", () => {
   it("Should get all users", async () => {
     const response = await request(app)
       .get("/users")
-      .set("Authorization", `Bearer ${config.token}`);
+      .set("Authorization", `Bearer ${config.token.admin}`);
     expect(response.status).toEqual(200);
   });
   // integration test to delete a user
   it("Should get delete a users", async () => {
     const response = await request(app)
       .delete("/users/1")
-      .set("Authorization", `Bearer ${config.token}`);
+      .set("Authorization", `Bearer ${config.token.admin}`);
     expect(response.status).toEqual(200);
     expect(response.body).toStrictEqual({ message: "User deleted" });
   });
