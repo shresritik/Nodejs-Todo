@@ -87,3 +87,20 @@ _Note: For Authentication provide Bearer `token` in headers_
 
 _Note: The email for super admin is shyam@dsa.com and the password needs to hashed and placed in .env_
 _User can only perform CRUD on its todo and super admin can only perform CRUD on the users_
+
+### Tests Scripts
+
+1. Unit Test
+
+```bash
+npm test
+```
+
+2. Integration Test
+
+```bash
+npm run test:integration
+```
+
+_Note: All the env variables are declared refer to .env.example._
+_The server should be started to run the integration test._
