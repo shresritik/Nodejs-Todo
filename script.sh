@@ -4,7 +4,7 @@
 DOCKER_REPO="shresritik/todo"
 
 # Fetch the latest commit hash
-latest_commit_hash=$(git rev-parse --short HEAD)
+latest_commit_hash=b09510d
 # Ensure the .env file exists
 ENV_FILE=".env"
 if [ ! -f "$ENV_FILE" ]; then
