@@ -102,5 +102,41 @@ npm test
 npm run test:integration
 ```
 
-_Note: All the env variables are declared refer to .env.example._
+_Note: All the env variables need to be declared, refer to .env.example._
 _The server should be started to run the integration test._
+
+## Database Migrations in Postgres
+
+### Migrations
+
+1. Make migrations
+
+```bash
+npm run migrate:make
+```
+
+2. Migrate
+
+```bash
+npm run migrate
+```
+
+### Seeding
+
+1. Make seed
+
+```bash
+npm run seed:make
+```
+
+2. Run Seed
+
+```bash
+npm run seed:run
+```
+
+### Rollback Migrations
+
+```bash
+npm run rollback
+```
