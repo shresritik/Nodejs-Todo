@@ -15,6 +15,9 @@ export function seed(knex: Knex): Promise<void> {
     .then(() => {
       return knex(TABLE_NAME).insert([
         {
+          roles: ROLE.ADMIN,
+        },
+        {
           roles: ROLE.USER,
         },
       ]);

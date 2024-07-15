@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import config from "../../config";
 
 const TABLE_NAME = "Users";
 
@@ -9,14 +10,15 @@ const TABLE_NAME = "Users";
  * @returns {Promise}
  */
 export function seed(knex: Knex): Promise<void> {
-  return knex(TABLE_NAME).then(() => {
-    return knex(TABLE_NAME).insert([
-      {
-        name: "shyam",
-        email: "shyam@dsa.com",
-        password:
-          "$2b$10$jHHqrh4QLprCkIe8lwVwEuovsZL9gk6NOME04g.SEMHvyd1G7obI6",
-      },
-    ]);
-  });
+  return knex(TABLE_NAME)
+    .del()
+    .then(() => {
+      return knex(TABLE_NAME).insert([
+        {
+          name: "shyam",
+          email: "shyam@dsa.com",
+          password: config.password,
+        },
+      ]);
+    });
 }
