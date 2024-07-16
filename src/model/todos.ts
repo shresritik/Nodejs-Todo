@@ -1,6 +1,8 @@
 import { STATUS } from "../enum";
 import { ITodo } from "../interface/todo";
+import { IQuery } from "../interface/utils";
 import loggerWithNameSpace from "../utils/logger";
+import BaseModel from "./base";
 const logger = loggerWithNameSpace("TodoModel");
 export let data: ITodo[] = [
   {
@@ -12,7 +14,81 @@ export let data: ITodo[] = [
 
   { id: 2, name: "Walk the dog", status: STATUS.INCOMPLETE, userId: 2 },
 ];
+export class TodoModel extends BaseModel {
+  static async createTodo(todo: ITodo, userId: number) {
+    const statusId = await this.connection()
+      .select("id")
+      .table("status")
+      .where("status", todo.status)
+      .first();
+    const data = {
+      name: todo.name,
+      statusId: +statusId.id,
+      userId,
+    };
 
+    await this.connection().insert(data).table("todos");
+    return data;
+  }
+  static async updateTodo(id: number, todo: ITodo, userId: number) {
+    const statusId = await this.connection()
+      .select("id")
+      .table("status")
+      .where("status", todo.status)
+      .first();
+    const data = {
+      id: todo.id,
+      name: todo.name,
+      statusId: +statusId.id,
+      userId,
+      updatedBy: userId,
+      updatedAt: new Date(),
+    };
+
+    await this.connection()
+      .update(data)
+      .table("todos")
+      .where({ "todos.id": id });
+    return data;
+  }
+  static getAllTodos(filter: IQuery, userId: number) {
+    const { q, page, size } = filter;
+    const query = this.connection()
+      .select("todos.id", "todos.name", "status.status", "todos.user_id")
+      .table("status")
+      .join("todos", "status.id", "todos.status_id")
+      .limit(size)
+      .offset((page - 1) * size);
+    if (q) {
+      query.whereLike("name", `%${q}%`);
+      return query;
+    }
+    query.where("user_id", userId);
+
+    return query;
+  }
+  static getTodoById(id: string, userId: number) {
+    return this.connection()
+      .select("todos.id", "todos.name", "status.status", "todos.user_id")
+      .table("status")
+      .join("todos", "status.id", "todos.status_id")
+      .where({ "todos.id": id, userId })
+      .first();
+  }
+  static count(userId: number) {
+    return this.connection()
+      .count("*")
+      .table("todos")
+      .where({ userId })
+      .first();
+  }
+  static deleteTodo(id: string, userId: number) {
+    return this.connection()
+      .delete()
+      .table("todos")
+      .where({ "todos.id": id, userId });
+  }
+}
 //read all todos depending on the userId from the models
 export const getAllTodos = (userId: number) => {
   logger.info("get all todos");

@@ -5,7 +5,7 @@ import HttpStatusCode from "http-status-codes";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("TodoController");
 // Create a todo
-export const createTodo = (
+export const createTodo = async (
   req: IRequest,
   res: Response,
   next: NextFunction
@@ -13,7 +13,7 @@ export const createTodo = (
   try {
     const { body } = req;
     const userId = Number(req.user?.id);
-    const result = UserServices.createTodo(body, userId);
+    const result = await UserServices.createTodo(body, userId);
     logger.info("create a todo");
     res.status(HttpStatusCode.CREATED).json(result);
   } catch (error) {
@@ -22,14 +22,16 @@ export const createTodo = (
   }
 };
 //Read all todos
-export const readAllTodos = (
+export const readAllTodos = async (
   req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const userId = Number(req.user?.id);
-    const result = UserServices.getAllTodos(userId);
+    const { query } = req;
+    console.log(query);
+    const result = await UserServices.getAllTodos(query, userId);
     logger.info("get all todos");
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
@@ -38,10 +40,14 @@ export const readAllTodos = (
   }
 };
 //Read a todo by id
-export const readTodo = (req: IRequest, res: Response, next: NextFunction) => {
+export const readTodo = async (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const userId = Number(req.user?.id);
-    const result = UserServices.getTodo(req.params.id, userId);
+    const result = await UserServices.getTodo(req.params.id, userId);
     logger.info("get a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
@@ -51,14 +57,18 @@ export const readTodo = (req: IRequest, res: Response, next: NextFunction) => {
   }
 };
 //update a todo by id
-export const updateTodo = (
+export const updateTodo = async (
   req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const userId = Number(req.user?.id);
-    const result = UserServices.updateTodo(req.params.id, req.body, userId);
+    const result = await UserServices.updateTodo(
+      req.params.id,
+      req.body,
+      userId
+    );
     logger.info("update a todo by id " + userId);
 
     res.status(HttpStatusCode.OK).json(result);
@@ -68,14 +78,14 @@ export const updateTodo = (
   }
 };
 //Delete a todo by id
-export const deleteTodo = (
+export const deleteTodo = async (
   req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const userId = Number(req.user?.id);
-    const result = UserServices.deleteTodo(req.params.id, userId);
+    const result = await UserServices.deleteTodo(req.params.id, userId);
     logger.info("delete a todo by id " + userId);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {

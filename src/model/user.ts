@@ -30,7 +30,6 @@ export class UserModel extends BaseModel {
       .leftJoin("roles", "users_roles.roles_id", "roles.id")
       .groupBy("users.id", "users.name", "users.password")
       .where("users.email", userEmail);
-    console.log(res.toSQL());
     return res;
   }
   static getUserById(id: number) {
@@ -60,11 +59,9 @@ export class UserModel extends BaseModel {
     };
 
     const userId = await this.getUserByEmail(user.email);
-    console.log(userId);
     if (userId.length > 0) {
       throw new BadRequest("User with email already exist");
     }
-    console.log(userId);
     await this.queryBuilder().insert(data).table("users");
     const usersId = (await this.getUserByEmail(user.email))[0];
 
