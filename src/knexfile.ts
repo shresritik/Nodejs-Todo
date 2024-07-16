@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 import config from "./config";
-const baseKnexFile: Knex.Config = {
+export const baseKnexFile: Knex.Config = {
   client: config.database.client,
   connection: {
     host: config.database.host,

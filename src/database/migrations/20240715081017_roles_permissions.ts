@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 
-const TABLE_NAME = "Roles_Permissions";
+const TABLE_NAME = "roles_permissions";
 
 /**
  * Create table TABLE_NAME.
@@ -17,13 +17,18 @@ export async function up(knex: Knex): Promise<void> {
       .unsigned()
       .notNullable()
       .references("id")
-      .inTable("Roles");
+      .inTable("roles")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
     table
       .integer("permission_id")
       .unsigned()
       .notNullable()
       .references("id")
-      .inTable("Permissions");
+      .inTable("permissions")
+
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
   });
 }
 

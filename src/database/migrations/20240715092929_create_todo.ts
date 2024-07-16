@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 
-const TABLE_NAME = "Todos";
+const TABLE_NAME = "todos";
 
 /**
  * Create table TABLE_NAME.
@@ -18,20 +18,29 @@ export async function up(knex: Knex): Promise<void> {
       .unsigned()
       .nullable()
       .references("id")
-      .inTable("Users");
+
+      .inTable("users")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
     table
       .integer("status_id")
       .unsigned()
       .nullable()
       .references("id")
-      .inTable("Status");
+
+      .inTable("status")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
 
     table
       .bigInteger("created_by")
       .unsigned()
       .nullable()
       .references("id")
-      .inTable(TABLE_NAME);
+
+      .inTable(TABLE_NAME)
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
 
     table.timestamp("updated_at").nullable();
 
@@ -39,8 +48,11 @@ export async function up(knex: Knex): Promise<void> {
       .bigInteger("updated_by")
       .unsigned()
       .references("id")
-      .inTable("Users")
-      .nullable();
+
+      .inTable("users")
+      .nullable()
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
   });
 }
 

@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 
-const TABLE_NAME = "Status";
+const TABLE_NAME = "status";
 
 /**
  * Create table TABLE_NAME.

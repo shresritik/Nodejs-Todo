@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import config from "../../config";
 
-const TABLE_NAME = "Users";
+const TABLE_NAME = "users";
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.
@@ -10,15 +10,13 @@ const TABLE_NAME = "Users";
  * @returns {Promise}
  */
 export function seed(knex: Knex): Promise<void> {
-  return knex(TABLE_NAME)
-    .del()
-    .then(() => {
-      return knex(TABLE_NAME).insert([
-        {
-          name: "shyam",
-          email: "shyam@dsa.com",
-          password: config.password,
-        },
-      ]);
-    });
+  return knex(TABLE_NAME).then(() => {
+    return knex(TABLE_NAME).insert([
+      {
+        name: "shyam",
+        email: "shyam@dsa.com",
+        password: config.password,
+      },
+    ]);
+  });
 }

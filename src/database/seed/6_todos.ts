@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 
-const TABLE_NAME = "Todos";
+const TABLE_NAME = "todos";
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.

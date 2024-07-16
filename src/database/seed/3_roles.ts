@@ -1,7 +1,7 @@
 import { Knex } from "knex";
 import { ROLE } from "../../enum";
 
-const TABLE_NAME = "Roles";
+const TABLE_NAME = "roles";
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.

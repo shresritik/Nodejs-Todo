@@ -13,10 +13,12 @@ const logger = loggerWithNameSpace("AuthService");
 export async function login(
   body: Pick<IUser, "email" | "password" | "permissions">
 ) {
-  const existingUser = getUserByEmail(body.email);
-  if (!existingUser) {
+  const existingUser = (await getUserByEmail(body.email))[0];
+
+  if (!existingUser || existingUser.length == 0) {
     throw new BadRequest("Invalid email or password");
   }
+
   const existingPasword = await bcrypt.compare(
     body.password,
     existingUser.password
