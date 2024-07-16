@@ -40,22 +40,16 @@ chmod +x script.sh
 
 ## Method 3:Using Docker for Linux / Windows / Mac
 
-Get the latest hash
-
-```bash
-git rev-parse --short HEAD
-```
-
 Use that hash in docker pull
 
 ```bash
-docker pull shresritik/todo:<latest_hash>
+docker pull shresritik/todo:6.68b07fc
 ```
 
 ### Run the server
 
 ```bash
-docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:<latest_hash>
+docker run -p <PORT>:<PORT> --env-file=<path_to_env> shresritik/todo:6.68b07fc
 ```
 
 ### Routes
