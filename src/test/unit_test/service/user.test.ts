@@ -132,6 +132,7 @@ describe("User Service Test Suite", () => {
 
       userModelcreateUserStub.returns(user);
       const response = await createUser(1, user);
+      expect(response).toStrictEqual(user);
     });
   });
   //test update user
