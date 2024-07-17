@@ -58,10 +58,6 @@ export class UserModel extends BaseModel {
       createdBy: createdBy,
     };
 
-    const userId = await this.getUserByEmail(user.email);
-    if (userId.length > 0) {
-      throw new BadRequest("User with email already exist");
-    }
     await this.queryBuilder().insert(data).table("users");
     const usersId = (await this.getUserByEmail(user.email))[0];
 

@@ -1,4 +1,4 @@
-import { NotFound } from "../error";
+import { BadRequest, NotFound } from "../error";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
 import * as UserModel from "../model/user";
@@ -9,6 +9,10 @@ const logger = loggerWithNameSpace("UserService");
 export async function createUser(createdBy: number, user: IUser) {
   const hashPassword = await bcrypt.hash(user.password, 10);
   logger.info("create a user");
+  const userId = await UserModel.UserModel.getUserByEmail(user.email);
+  if (userId.length > 0) {
+    throw new BadRequest("User with email already exist");
+  }
   const response = await UserModel.UserModel.createUser(createdBy, {
     ...user,
     password: hashPassword,
