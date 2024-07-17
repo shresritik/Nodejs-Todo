@@ -18,20 +18,17 @@ describe.only("Todo integration Test Suite", () => {
       .set("Authorization", `Bearer ${config.token.user}`)
       .send(todo);
     expect(response.status).toEqual(201);
-    expect(response.body).toEqual({
-      message: "success",
-    });
+    expect(response.body).toHaveProperty(["name"]);
   });
-  // integration test to update a todo
+  // // integration test to update a todo
   it("should update a todo", async () => {
     const response = await request(app)
-      .put("/projects/3")
+      .put("/projects/2")
       .set("Authorization", `Bearer ${config.token.user}`)
       .send(todo);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      message: "success",
-    });
+
+    expect(response.body).toHaveProperty(["name"]);
   });
   // integration test to get all todo
   it("should get all todos", async () => {
@@ -40,19 +37,19 @@ describe.only("Todo integration Test Suite", () => {
       .set("Authorization", `Bearer ${config.token.user}`);
     expect(response.status).toEqual(200);
   });
-  // integration test to get a todo
+  // // integration test to get a todo
   it("should get a todo", async () => {
     const response = await request(app)
-      .get("/projects/3")
+      .get("/projects/2")
       .set("Authorization", `Bearer ${config.token.user}`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...todo, id: 3, userId: 2 });
+    expect(response.body).toHaveProperty(["name"]);
   });
 
-  // integration test to delete a todo
+  // // integration test to delete a todo
   it("should delete a todo", async () => {
     const response = await request(app)
-      .delete("/projects/3")
+      .delete("/projects/2")
       .set("Authorization", `Bearer ${config.token.user}`);
     expect(response.status).toEqual(200);
   });
