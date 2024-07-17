@@ -17,6 +17,7 @@ export let userData: IUser[] = [
   },
 ];
 export class UserModel extends BaseModel {
+  //get user by email
   static getUserByEmail(userEmail: string) {
     const res = this.queryBuilder()
       .select(
@@ -32,6 +33,7 @@ export class UserModel extends BaseModel {
       .where("users.email", userEmail);
     return res;
   }
+  // get user by id
   static getUserById(id: number) {
     const res = this.queryBuilder()
       .select(
@@ -48,6 +50,7 @@ export class UserModel extends BaseModel {
       .first();
     return res;
   }
+  //create user and assign user roles and permissions
   static async createUser(createdBy: number, user: IUser) {
     logger.info("create a user");
     const data = {
@@ -106,6 +109,7 @@ export class UserModel extends BaseModel {
     };
     return response;
   }
+  // update user
   static async updateUser(
     updatedBy: number,
     oldUser: IUser,
@@ -127,6 +131,7 @@ export class UserModel extends BaseModel {
 
     return { ...data, id: oldUser.id, permissions: oldUser.permissions };
   }
+  // get all users and add pagination
   static getUsers(filter: IQuery) {
     const { q, page, size } = filter;
     const query = this.queryBuilder()
@@ -148,6 +153,7 @@ export class UserModel extends BaseModel {
     }
     return query;
   }
+  // count number of users
   static count(filter: IQuery) {
     const { q } = filter;
     const query = this.queryBuilder().count("*").table("users").first();

@@ -15,6 +15,7 @@ export let data: ITodo[] = [
   { id: 2, name: "Walk the dog", status: STATUS.INCOMPLETE, userId: 2 },
 ];
 export class TodoModel extends BaseModel {
+  // create todo
   static async createTodo(todo: ITodo, userId: number) {
     const statusId = await this.connection()
       .select("id")
@@ -30,6 +31,7 @@ export class TodoModel extends BaseModel {
     await this.connection().insert(data).table("todos");
     return data;
   }
+  // update todo with id
   static async updateTodo(id: number, todo: ITodo, userId: number) {
     const statusId = await this.connection()
       .select("id")
@@ -51,6 +53,7 @@ export class TodoModel extends BaseModel {
       .where({ "todos.id": id });
     return data;
   }
+  // get all todos and add pagination
   static getAllTodos(filter: IQuery, userId: number) {
     const { q, page, size } = filter;
     const query = this.connection()
@@ -67,6 +70,7 @@ export class TodoModel extends BaseModel {
 
     return query;
   }
+  // get todo by id
   static getTodoById(id: string, userId: number) {
     return this.connection()
       .select("todos.id", "todos.name", "status.status", "todos.user_id")
@@ -75,6 +79,7 @@ export class TodoModel extends BaseModel {
       .where({ "todos.id": id, userId })
       .first();
   }
+  // count all todos
   static count(userId: number) {
     return this.connection()
       .count("*")
@@ -82,6 +87,7 @@ export class TodoModel extends BaseModel {
       .where({ userId })
       .first();
   }
+  // delete todo
   static deleteTodo(id: string, userId: number) {
     return this.connection()
       .delete()
