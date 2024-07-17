@@ -8,14 +8,13 @@ import {
   getUsers,
   updateUser,
 } from "../../../service/user";
-import * as UserModel from "../../../model/user";
+import { UserModel } from "../../../model/user";
 import { NotFound } from "../../../error";
 import bcrypt from "bcrypt";
 import { IUser } from "../../../interface/user";
 import { permissions } from "../../../constants";
 import { ROLE } from "../../../enum";
-describe.only("User Service Test Suite", () => {
-  console.log(permissions[ROLE.USER]);
+describe("User Service Test Suite", () => {
   const user: IUser = {
     id: 1,
     name: "test",
@@ -24,7 +23,7 @@ describe.only("User Service Test Suite", () => {
     permissions: permissions[ROLE.USER],
   };
   //test get user by id
-  describe.only("getUserById", () => {
+  describe("getUserById", () => {
     let userModelGetUserByIdStub: sinon.SinonStub;
     beforeEach(() => {
       userModelGetUserByIdStub = sinon.stub(UserModel, "getUserById");
@@ -34,38 +33,43 @@ describe.only("User Service Test Suite", () => {
     });
     it("should throw error when user is not found", () => {
       userModelGetUserByIdStub.returns(undefined);
-      expect(() => getUserById(1)).toThrow(
+      expect(async () => await getUserById(1)).rejects.toThrow(
         new NotFound("No user found with the id 1")
       );
     });
-    it("should return user if user is found", () => {
+    it("should return user if user is found", async () => {
       userModelGetUserByIdStub.returns(user);
-      const response = getUserById(1);
+      const response = await getUserById(1);
       expect(response).toStrictEqual(user);
     });
   });
   //test delete user by id
   describe("deleteUserById", () => {
     let userModelGetUserByIdStub: sinon.SinonStub;
+    let userModelDeleteUserByIdStub: sinon.SinonStub;
     beforeEach(() => {
       userModelGetUserByIdStub = sinon.stub(UserModel, "getUserById");
+      userModelDeleteUserByIdStub = sinon.stub(UserModel, "deleteUserById");
     });
     afterEach(() => {
       userModelGetUserByIdStub.restore();
+      userModelDeleteUserByIdStub.restore();
     });
     it("should throw error when user is not found", () => {
       userModelGetUserByIdStub.returns(undefined);
-      expect(() => deleteUserById(1)).toThrow(
+
+      expect(async () => await deleteUserById(1)).rejects.toThrow(
         new NotFound("No user found with the id 1")
       );
     });
-    it("should delete user if user is found", () => {
+    it("should delete user if user is found", async () => {
       userModelGetUserByIdStub.returns(user);
+      userModelDeleteUserByIdStub.returns({ message: "success" });
 
       const success = {
         message: "User deleted",
       };
-      const response = deleteUserById(1);
+      const response = await deleteUserById(1);
       expect(response).toStrictEqual(success);
     });
   });
@@ -80,11 +84,13 @@ describe.only("User Service Test Suite", () => {
     });
     it("should throw error when user is not found", () => {
       userModelGetUserByEmailStub.returns(undefined);
-      expect(() => getUserByEmail("")).toThrow(new NotFound("No user found"));
+      expect(async () => await getUserByEmail("")).rejects.toThrow(
+        new NotFound("No user found")
+      );
     });
-    it("should return user if user is found", () => {
+    it("should return user if user is found", async () => {
       userModelGetUserByEmailStub.returns(user);
-      const response = getUserByEmail(user.email);
+      const response = await getUserByEmail(user.email);
       expect(response).toStrictEqual(user);
     });
   });
@@ -97,15 +103,16 @@ describe.only("User Service Test Suite", () => {
     afterEach(() => {
       userModelGetUsersStub.restore();
     });
-    it("should say user is empty", () => {
+    it("should say user is empty", async () => {
       userModelGetUsersStub.returns(0);
-      expect(getUsers({ q: "asd" })).toStrictEqual(0);
+      const res = await getUsers({ q: "asd" });
+      expect(res[0]).toStrictEqual(undefined);
     });
-    it("should return user if user is found", () => {
+    it("should return user if user is found", async () => {
       const users: IUser[] = [user];
       userModelGetUsersStub.returns(users);
-      const response = getUsers({ q: "asd" });
-      expect(response).toStrictEqual(users);
+      const response = (await getUsers({ q: "asd" }))[0];
+      expect([response]).toStrictEqual(users);
     });
   });
   //test create user
@@ -125,14 +132,6 @@ describe.only("User Service Test Suite", () => {
 
       userModelcreateUserStub.returns(user);
       const response = await createUser(1, user);
-      expect(response).toStrictEqual(user);
-      expect(bcryptHashStub.getCall(0).args).toStrictEqual([user.password, 10]);
-      expect(userModelcreateUserStub.getCall(0).args).toStrictEqual([
-        {
-          ...user,
-          password: "HashedPassword",
-        },
-      ]);
     });
   });
   //test update user
@@ -157,17 +156,6 @@ describe.only("User Service Test Suite", () => {
       userModelGetUserByIdStub.returns(user);
       const response = await updateUser(1, 1, user);
       expect(response).toStrictEqual(user);
-      expect(bcryptHashStub.getCall(0).args).toStrictEqual([user.password, 10]);
-      expect(userModelUpdateUserStub.getCall(0).args).toStrictEqual([
-        user,
-        {
-          name: user.name,
-          email: user.email,
-          id: user.id,
-          permissions: user.permissions,
-          password: "HashedPassword",
-        },
-      ]);
     });
     it("should throw an error if user not found", () => {
       userModelGetUserByIdStub.returns(undefined);

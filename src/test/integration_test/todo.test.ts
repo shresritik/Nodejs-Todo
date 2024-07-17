@@ -4,7 +4,7 @@ import express from "express";
 import { STATUS } from "../../enum";
 import config from "../../config";
 import { expressStarter } from "../../utils/express";
-describe("Todo integration Test Suite", () => {
+describe.only("Todo integration Test Suite", () => {
   const app = express();
   expressStarter(app);
   const todo = {

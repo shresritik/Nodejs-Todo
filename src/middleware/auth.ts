@@ -35,7 +35,6 @@ export function authorize(permission: PERMISSION) {
   return (req: IRequest, res: Response, next: NextFunction) => {
     const user = req.user;
     try {
-      console.log(user);
       const permit = user.permissions.includes(permission);
       if (!permit) {
         next(new UnauthorizedError("Unauthorized"));

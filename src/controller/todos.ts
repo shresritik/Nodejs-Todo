@@ -30,7 +30,6 @@ export const readAllTodos = async (
   try {
     const userId = Number(req.user?.id);
     const { query } = req;
-    console.log(query);
     const result = await UserServices.getAllTodos(query, userId);
     logger.info("get all todos");
     res.status(HttpStatusCode.OK).json(result);

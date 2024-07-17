@@ -1,12 +1,12 @@
 import request from "supertest";
 import express from "express";
-import { ROLE } from "../../enum";
 import bcrypt from "bcrypt";
 import config from "../../config";
 import expect from "expect";
 import sinon from "sinon";
 import { afterEach } from "mocha";
 import { expressStarter } from "../../utils/express";
+import { permissions } from "../../constants";
 describe("User Integration Test Suite", () => {
   const app = express();
   expressStarter(app);
@@ -14,7 +14,7 @@ describe("User Integration Test Suite", () => {
     name: "User Integration",
     email: "user@test.com",
     password: "test1234567Aa!",
-    permissions: [ROLE.USER],
+    permissions: permissions.user,
   };
   let bcryptHashStub: sinon.SinonStub;
   beforeEach(() => {

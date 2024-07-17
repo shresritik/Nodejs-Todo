@@ -155,9 +155,8 @@ export class UserModel extends BaseModel {
     }
     return query;
   }
-  static async deleteUserById(id: number) {
-    const res = this.queryBuilder().delete().table("users").where({ id });
-    await res;
+  static deleteUserById(id: number) {
+    return this.queryBuilder().delete().table("users").where({ id });
   }
 }
 /**
