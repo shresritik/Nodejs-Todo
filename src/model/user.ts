@@ -70,28 +70,7 @@ export class UserModel extends BaseModel {
     };
 
     await this.queryBuilder().insert(userRoles).table("users_roles");
-    const rolesPermission = [
-      {
-        roleId: 2,
-        permissionId: 1,
-      },
-      {
-        roleId: 2,
-        permissionId: 2,
-      },
-      {
-        roleId: 2,
-        permissionId: 3,
-      },
-      {
-        roleId: 2,
-        permissionId: 4,
-      },
-    ];
 
-    await this.queryBuilder()
-      .insert(rolesPermission)
-      .table("roles_permissions");
     await this.queryBuilder()
       .table("roles")
       .select("roles")
