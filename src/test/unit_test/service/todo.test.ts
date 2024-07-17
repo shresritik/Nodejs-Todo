@@ -33,7 +33,7 @@ describe.only("Todo Service Test Suite", () => {
       ];
       todoModelgetAllTodos.returns(todo);
       const result = await getAllTodos({}, 1);
-      expect(result).resolves.toStrictEqual(todo);
+      expect(result).toStrictEqual(todo);
     });
     it("should throw error if todo is not found", () => {
       todoModelgetAllTodos.returns(undefined);
@@ -90,7 +90,7 @@ describe.only("Todo Service Test Suite", () => {
       const success = { message: "Deleted" };
       todoModelGetTodoById.returns(todo);
       const result = await deleteTodo("1", todo.userId);
-      expect(result).resolves.toStrictEqual(success);
+      expect(result).toStrictEqual(success);
       expect(todoModelGetTodoById.getCall(0).args).toStrictEqual([
         "1",
         todo.userId,
@@ -122,7 +122,7 @@ describe.only("Todo Service Test Suite", () => {
       };
       todoModelCreateTodo.returns(success);
       const result = await createTodo(todo, todo.userId);
-      expect(result).resolves.toStrictEqual(success);
+      expect(result).toStrictEqual(success);
       expect(todoModelCreateTodo.getCall(0).args).toStrictEqual([
         todo,
         todo.userId,
@@ -153,7 +153,7 @@ describe.only("Todo Service Test Suite", () => {
       todoModelGetTodoById.returns(todo);
       todoModelUpdateTodo.returns(success);
       const result = await updateTodo("1", todo, todo.userId);
-      expect(result).resolves.toStrictEqual(success);
+      expect(result).toStrictEqual(success);
       expect(todoModelUpdateTodo.getCall(0).args).toStrictEqual([todo, todo]);
       expect(todoModelGetTodoById.getCall(0).args).toStrictEqual([
         "1",

@@ -12,10 +12,19 @@ import * as UserModel from "../../../model/user";
 import { NotFound } from "../../../error";
 import bcrypt from "bcrypt";
 import { IUser } from "../../../interface/user";
+import { permissions } from "../../../constants";
 import { ROLE } from "../../../enum";
-describe("User Service Test Suite", () => {
+describe.only("User Service Test Suite", () => {
+  console.log(permissions[ROLE.USER]);
+  const user: IUser = {
+    id: 1,
+    name: "test",
+    email: "test@test.com",
+    password: "test123",
+    permissions: permissions[ROLE.USER],
+  };
   //test get user by id
-  describe("getUserById", () => {
+  describe.only("getUserById", () => {
     let userModelGetUserByIdStub: sinon.SinonStub;
     beforeEach(() => {
       userModelGetUserByIdStub = sinon.stub(UserModel, "getUserById");
@@ -30,13 +39,6 @@ describe("User Service Test Suite", () => {
       );
     });
     it("should return user if user is found", () => {
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
       userModelGetUserByIdStub.returns(user);
       const response = getUserById(1);
       expect(response).toStrictEqual(user);
@@ -58,13 +60,6 @@ describe("User Service Test Suite", () => {
       );
     });
     it("should delete user if user is found", () => {
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
       userModelGetUserByIdStub.returns(user);
 
       const success = {
@@ -88,13 +83,6 @@ describe("User Service Test Suite", () => {
       expect(() => getUserByEmail("")).toThrow(new NotFound("No user found"));
     });
     it("should return user if user is found", () => {
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
       userModelGetUserByEmailStub.returns(user);
       const response = getUserByEmail(user.email);
       expect(response).toStrictEqual(user);
@@ -114,18 +102,10 @@ describe("User Service Test Suite", () => {
       expect(getUsers({ q: "asd" })).toStrictEqual(0);
     });
     it("should return user if user is found", () => {
-      const user: IUser[] = [
-        {
-          id: 1,
-          name: "test",
-          email: "test@test.com",
-          password: "test123",
-          permissions: [ROLE.ADMIN],
-        },
-      ];
-      userModelGetUsersStub.returns(user);
+      const users: IUser[] = [user];
+      userModelGetUsersStub.returns(users);
       const response = getUsers({ q: "asd" });
-      expect(response).toStrictEqual(user);
+      expect(response).toStrictEqual(users);
     });
   });
   //test create user
@@ -142,13 +122,7 @@ describe("User Service Test Suite", () => {
     });
     it("should create a user", async () => {
       bcryptHashStub.resolves("HashedPassword");
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
+
       userModelcreateUserStub.returns(user);
       const response = await createUser(1, user);
       expect(response).toStrictEqual(user);
@@ -178,13 +152,7 @@ describe("User Service Test Suite", () => {
     });
     it("should update a user", async () => {
       bcryptHashStub.resolves("HashedPassword");
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
+
       userModelUpdateUserStub.returns(user);
       userModelGetUserByIdStub.returns(user);
       const response = await updateUser(1, 1, user);
@@ -202,13 +170,6 @@ describe("User Service Test Suite", () => {
       ]);
     });
     it("should throw an error if user not found", () => {
-      const user: IUser = {
-        id: 1,
-        name: "test",
-        email: "test@test.com",
-        password: "test123",
-        permissions: [ROLE.ADMIN],
-      };
       userModelGetUserByIdStub.returns(undefined);
       expect(async () => await updateUser(1, 1, user)).rejects.toThrow(
         new NotFound("No user found with the id 1")

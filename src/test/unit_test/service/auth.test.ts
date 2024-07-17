@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import * as UserUtils from "../../../utils";
 
 import { BadRequest } from "../../../error";
+import { permissions } from "../../../constants";
 describe("Auth Test Suite", () => {
   const tokens = {
     accessToken: "accessToken",
@@ -36,7 +37,7 @@ describe("Auth Test Suite", () => {
       const user: Pick<IUser, "email" | "password" | "permissions"> = {
         email: "test@test.com",
         password: "hashedPassword",
-        permissions: [ROLE.ADMIN],
+        permissions: permissions["super-admin"],
       };
 
       const userLogin = await login(user);
@@ -50,7 +51,7 @@ describe("Auth Test Suite", () => {
       const user: Pick<IUser, "email" | "password" | "permissions"> = {
         email: "",
         password: "",
-        permissions: [ROLE.ADMIN],
+        permissions: permissions["super-admin"],
       };
 
       expect(async () => await login(user)).rejects.toThrow(
