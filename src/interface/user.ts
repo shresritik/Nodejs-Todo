@@ -1,9 +1,8 @@
-import { ROLE } from "../enum";
-
+import { PERMISSION } from "../enum";
 export interface IUser {
   id: number;
   name: string;
   email: string;
   password: string;
-  permissions: ROLE[];
+  permissions: PERMISSION[] | PERMISSION;
 }

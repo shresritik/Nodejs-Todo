@@ -1,6 +1,6 @@
 import config from "../config";
+import { permissions } from "../constants";
 import { ROLE } from "../enum";
-import { BadRequest, NotFound } from "../error";
 import { IUser } from "../interface/user";
 import { IQuery } from "../interface/utils";
 import loggerWithNameSpace from "../utils/logger";
@@ -13,7 +13,7 @@ export let userData: IUser[] = [
     name: "shyam",
     email: "shyam@dsa.com",
     password: config.password!,
-    permissions: [ROLE.ADMIN],
+    permissions: permissions[ROLE.ADMIN],
   },
 ];
 export class UserModel extends BaseModel {
@@ -24,6 +24,7 @@ export class UserModel extends BaseModel {
         "users.id",
         "users.name",
         "users.password",
+        "users.email",
         this.queryBuilder().raw("ARRAY_AGG(roles.roles) AS permissions")
       )
       .table("users")
@@ -62,13 +63,13 @@ export class UserModel extends BaseModel {
     };
 
     await this.queryBuilder().insert(data).table("users");
+
     const usersId = (await this.getUserByEmail(user.email))[0];
 
     const userRoles = {
       userId: usersId.id,
       roles_id: 2,
     };
-
     await this.queryBuilder().insert(userRoles).table("users_roles");
 
     await this.queryBuilder()
@@ -87,6 +88,17 @@ export class UserModel extends BaseModel {
       email: user.email,
     };
     return response;
+  }
+  static async findUserPermission(email) {
+    let permissions = await this.queryBuilder()
+      .select("permissions")
+      .from("users")
+      .join("users_roles", "users.id", "users_roles.user_id")
+      .join("roles", "users_roles.roles_id", "roles.id")
+      .join("roles_permissions", "roles.id", "roles_permissions.role_id")
+      .join("permissions", "roles_permissions.permission_id", "permissions.id")
+      .where("email", email);
+    return permissions;
   }
   // update user
   static async updateUser(
@@ -110,6 +122,7 @@ export class UserModel extends BaseModel {
 
     return { ...data, id: oldUser.id, permissions: oldUser.permissions };
   }
+
   // get all users and add pagination
   static getUsers(filter: IQuery) {
     const { q, page, size } = filter;
@@ -158,7 +171,7 @@ export function createUser(user: IUser) {
     name: user.name,
     password: user.password,
     email: user.email,
-    permissions: [ROLE.USER],
+    permissions: permissions[ROLE.USER],
   };
   userData.push(data);
   return data;

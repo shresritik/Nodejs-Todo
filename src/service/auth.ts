@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { mockVerify, signUser } from "../utils";
 import { BadRequest } from "../error";
 import loggerWithNameSpace from "../utils/logger";
+import { UserModel } from "../model/user";
 const logger = loggerWithNameSpace("AuthService");
 /**
  * login the user if email or password exists and generate the tokens
@@ -24,11 +25,15 @@ export async function login(
     existingUser.password
   );
   if (!existingPasword) throw new BadRequest("Invalid email or password");
+  const permissionOfUser = (await UserModel.findUserPermission(body.email)).map(
+    (obj) => obj.permissions
+  );
   const payload: Omit<IUser, "password"> = {
     id: existingUser.id,
     email: existingUser.email,
     name: existingUser.name,
-    permissions: existingUser.permissions,
+    // permissions: existingUser.permissions,
+    permissions: permissionOfUser,
   };
   logger.info("sign user");
   return signUser(payload);
@@ -41,10 +46,14 @@ export async function login(
 export async function refresh(token: string) {
   try {
     const { id, email, name } = mockVerify(token);
+    const permissionOfUser = (await UserModel.findUserPermission(email)).map(
+      (obj) => obj.permissions
+    );
     const payload = {
       id,
       email,
       name,
+      permissions: permissionOfUser,
     };
     logger.info("refresh token");
     return signUser(payload);

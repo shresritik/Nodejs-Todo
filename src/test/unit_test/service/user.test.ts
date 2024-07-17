@@ -150,7 +150,7 @@ describe("User Service Test Suite", () => {
         permissions: [ROLE.ADMIN],
       };
       userModelcreateUserStub.returns(user);
-      const response = await createUser(user);
+      const response = await createUser(1, user);
       expect(response).toStrictEqual(user);
       expect(bcryptHashStub.getCall(0).args).toStrictEqual([user.password, 10]);
       expect(userModelcreateUserStub.getCall(0).args).toStrictEqual([
@@ -187,7 +187,7 @@ describe("User Service Test Suite", () => {
       };
       userModelUpdateUserStub.returns(user);
       userModelGetUserByIdStub.returns(user);
-      const response = await updateUser(1, user);
+      const response = await updateUser(1, 1, user);
       expect(response).toStrictEqual(user);
       expect(bcryptHashStub.getCall(0).args).toStrictEqual([user.password, 10]);
       expect(userModelUpdateUserStub.getCall(0).args).toStrictEqual([
@@ -210,7 +210,7 @@ describe("User Service Test Suite", () => {
         permissions: [ROLE.ADMIN],
       };
       userModelGetUserByIdStub.returns(undefined);
-      expect(async () => await updateUser(1, user)).rejects.toThrow(
+      expect(async () => await updateUser(1, 1, user)).rejects.toThrow(
         new NotFound("No user found with the id 1")
       );
     });

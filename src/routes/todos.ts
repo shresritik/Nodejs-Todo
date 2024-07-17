@@ -7,7 +7,7 @@ import {
   deleteTodo,
 } from "../controller/todos";
 import { authenticate, authorize } from "../middleware/auth";
-import { ROLE } from "../enum";
+import { PERMISSION } from "../enum";
 import {
   validateReqBody,
   validateReqId,
@@ -24,7 +24,7 @@ const router = express();
 router.post(
   "/",
   authenticate,
-  authorize(ROLE.USER),
+  authorize(PERMISSION.TODO_POST),
   validateReqBody(createTodoSchema),
   createTodo
 );
@@ -32,7 +32,7 @@ router.post(
 router.get(
   "/",
   authenticate,
-  authorize([ROLE.USER, ROLE.ADMIN]),
+  authorize(PERMISSION.TODO_GET),
   validateReqQuery(getTodoByQuerySchema),
   readAllTodos
 );
@@ -40,7 +40,7 @@ router.get(
 router.get(
   "/:id",
   authenticate,
-  authorize([ROLE.USER, ROLE.ADMIN]),
+  authorize(PERMISSION.TODO_GET),
   validateReqId(getTodoByIdSchema),
   readTodo
 );
@@ -48,12 +48,17 @@ router.get(
 router.put(
   "/:id",
   authenticate,
-  authorize(ROLE.USER),
+  authorize(PERMISSION.TODO_PUT),
   validateReqId(getTodoByIdSchema),
   validateReqBody(updateTodoSchema),
   updateTodo
 );
 // route handler to delete a todo by id
-router.delete("/:id", authenticate, authorize(ROLE.USER), deleteTodo);
+router.delete(
+  "/:id",
+  authenticate,
+  authorize(PERMISSION.TODO_DELETE),
+  deleteTodo
+);
 
 export default router;

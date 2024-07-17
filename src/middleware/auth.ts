@@ -4,7 +4,7 @@ import config from "../config";
 import { IRequest } from "../interface/auth";
 import { IUser } from "../interface/user";
 import { UnauthorizedError } from "../error";
-import { ROLE } from "../enum";
+import { PERMISSION } from "../enum";
 import loggerWithNameSpace from "../utils/logger";
 const logger = loggerWithNameSpace("Authentication");
 //check for the authentication token in routes and verify it with jwt secret and store the response in request
@@ -31,24 +31,16 @@ export function authenticate(req: IRequest, res: Response, next: NextFunction) {
   next();
 }
 //check permission for super-admin or user in routes
-export function authorize(permission: ROLE | ROLE[]) {
+export function authorize(permission: PERMISSION) {
   return (req: IRequest, res: Response, next: NextFunction) => {
     const user = req.user;
     try {
-      if (typeof permission == "string") {
-        if (!user?.permissions.includes(permission)) {
-          next(new UnauthorizedError("Unauthorized"));
-        }
-        logger.info("authorize " + permission);
-      } else if (typeof permission == "object") {
-        const permit = permission.findIndex((p) =>
-          user?.permissions.includes(p)
-        );
-        if (permit == -1) {
-          next(new UnauthorizedError("Unauthorized"));
-        }
-        logger.info("authorize " + permission[permit]);
+      console.log(user);
+      const permit = user.permissions.includes(permission);
+      if (!permit) {
+        next(new UnauthorizedError("Unauthorized"));
       }
+      logger.info("authorize " + permit);
     } catch (error) {
       logger.error("Permission failed");
 

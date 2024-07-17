@@ -7,7 +7,7 @@ import {
   deleteUserById,
 } from "../controller/user";
 import { authenticate, authorize } from "../middleware/auth";
-import { ROLE } from "../enum";
+import { PERMISSION } from "../enum";
 import {
   validateReqBody,
   validateReqId,
@@ -25,7 +25,7 @@ const router = express();
 router.post(
   "/",
   authenticate,
-  authorize(ROLE.ADMIN),
+  authorize(PERMISSION.USER_POST),
   validateReqBody(createUserSchema),
   createUser
 );
@@ -33,7 +33,7 @@ router.post(
 router.get(
   "/",
   authenticate,
-  authorize(ROLE.ADMIN),
+  authorize(PERMISSION.USER_GET),
   validateReqQuery(getUserByQuerySchema),
   getUsers
 );
@@ -41,7 +41,7 @@ router.get(
 router.put(
   "/:id",
   authenticate,
-  authorize(ROLE.ADMIN),
+  authorize(PERMISSION.USER_PUT),
   validateReqId(getUserByIdSchema),
   validateReqBody(updateUserSchema),
   updateUser
@@ -50,10 +50,15 @@ router.put(
 router.get(
   "/:id",
   authenticate,
-  authorize(ROLE.ADMIN),
+  authorize(PERMISSION.USER_GET),
   validateReqId(getUserByIdSchema),
   getUserById
 );
 //router handler to delete a user by id
-router.delete("/:id", authenticate, authorize(ROLE.ADMIN), deleteUserById);
+router.delete(
+  "/:id",
+  authenticate,
+  authorize(PERMISSION.USER_DELETE),
+  deleteUserById
+);
 export default router;

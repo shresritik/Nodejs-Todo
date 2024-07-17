@@ -12,9 +12,9 @@ import {
 } from "../../../service/todos";
 import { NotFound } from "../../../error";
 
-describe("Todo Service Test Suite", () => {
+describe.only("Todo Service Test Suite", () => {
   //test get all todos
-  describe("getAllTodos", () => {
+  describe.only("getAllTodos", () => {
     let todoModelgetAllTodos: sinon.SinonStub;
     beforeEach(() => {
       todoModelgetAllTodos = sinon.stub(TodoModel, "getAllTodos");
@@ -22,7 +22,7 @@ describe("Todo Service Test Suite", () => {
     afterEach(() => {
       todoModelgetAllTodos.restore();
     });
-    it("should get all todos", () => {
+    it("should get all todos", async () => {
       const todo: ITodo[] = [
         {
           id: 1,
@@ -32,12 +32,14 @@ describe("Todo Service Test Suite", () => {
         },
       ];
       todoModelgetAllTodos.returns(todo);
-      const result = getAllTodos(1);
-      expect(result).toStrictEqual(todo);
+      const result = await getAllTodos({}, 1);
+      expect(result).resolves.toStrictEqual(todo);
     });
     it("should throw error if todo is not found", () => {
       todoModelgetAllTodos.returns(undefined);
-      expect(() => getAllTodos(1)).toThrow(new NotFound("No data found"));
+      expect(async () => await getAllTodos({}, 1)).rejects.toThrow(
+        new NotFound("No data found")
+      );
     });
   });
   //test get todo by id
@@ -64,7 +66,7 @@ describe("Todo Service Test Suite", () => {
     });
     it("should throw error if todo is not found", () => {
       todoModelgetTodoById.returns(undefined);
-      expect(() => getTodo("1", 1)).toThrow(
+      expect(async () => await getTodo("1", 1)).rejects.toThrow(
         new NotFound("No todo found by id 1")
       );
     });
@@ -78,7 +80,7 @@ describe("Todo Service Test Suite", () => {
     afterEach(() => {
       todoModelGetTodoById.restore();
     });
-    it("should Delete todo by id", () => {
+    it("should Delete todo by id", async () => {
       const todo: ITodo = {
         id: 1,
         name: "test",
@@ -87,8 +89,8 @@ describe("Todo Service Test Suite", () => {
       };
       const success = { message: "Deleted" };
       todoModelGetTodoById.returns(todo);
-      const result = deleteTodo("1", todo.userId);
-      expect(result).toStrictEqual(success);
+      const result = await deleteTodo("1", todo.userId);
+      expect(result).resolves.toStrictEqual(success);
       expect(todoModelGetTodoById.getCall(0).args).toStrictEqual([
         "1",
         todo.userId,
@@ -96,7 +98,7 @@ describe("Todo Service Test Suite", () => {
     });
     it("should throw error if todo is not found", () => {
       todoModelGetTodoById.returns(undefined);
-      expect(() => deleteTodo("1", 1)).toThrow(
+      expect(async () => await deleteTodo("1", 1)).rejects.toThrow(
         new NotFound("No todo found by id 1")
       );
     });
@@ -110,7 +112,7 @@ describe("Todo Service Test Suite", () => {
     afterEach(() => {
       todoModelCreateTodo.restore();
     });
-    it("should create a todo", () => {
+    it("should create a todo", async () => {
       const success = { message: "success" };
       const todo: ITodo = {
         id: 1,
@@ -119,8 +121,8 @@ describe("Todo Service Test Suite", () => {
         userId: 1,
       };
       todoModelCreateTodo.returns(success);
-      const result = createTodo(todo, todo.userId);
-      expect(result).toStrictEqual(success);
+      const result = await createTodo(todo, todo.userId);
+      expect(result).resolves.toStrictEqual(success);
       expect(todoModelCreateTodo.getCall(0).args).toStrictEqual([
         todo,
         todo.userId,
@@ -140,7 +142,7 @@ describe("Todo Service Test Suite", () => {
       todoModelUpdateTodo.restore();
       todoModelGetTodoById.restore();
     });
-    it("should update a todo", () => {
+    it("should update a todo", async () => {
       const success = { message: "success" };
       const todo: ITodo = {
         id: 1,
@@ -150,8 +152,8 @@ describe("Todo Service Test Suite", () => {
       };
       todoModelGetTodoById.returns(todo);
       todoModelUpdateTodo.returns(success);
-      const result = updateTodo("1", todo, todo.userId);
-      expect(result).toStrictEqual(success);
+      const result = await updateTodo("1", todo, todo.userId);
+      expect(result).resolves.toStrictEqual(success);
       expect(todoModelUpdateTodo.getCall(0).args).toStrictEqual([todo, todo]);
       expect(todoModelGetTodoById.getCall(0).args).toStrictEqual([
         "1",
@@ -166,9 +168,9 @@ describe("Todo Service Test Suite", () => {
         userId: 1,
       };
       todoModelGetTodoById.returns(undefined);
-      expect(() => updateTodo("1", todo, todo.userId)).toThrow(
-        new NotFound("No todo found by id 1")
-      );
+      expect(
+        async () => await updateTodo("1", todo, todo.userId)
+      ).rejects.toThrow(new NotFound("No todo found by id 1"));
     });
   });
 });
